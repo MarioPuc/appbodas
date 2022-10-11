@@ -233,7 +233,7 @@ export default new Vuex.Store({
 
     },
 
-    async confirmacionAsistencia({commit}, data) {
+    async confirmacionAsistencia({commit, state}, data) {
       const payload = {
         visibilidad: false,
         statusConfirmacion: data
@@ -241,7 +241,9 @@ export default new Vuex.Store({
 
       commit('setConfirmacionAsistencia', payload)
 
-      let invitado = state.state.datosApp.invitado
+      let invitado = state.datosApp.invitado
+
+      console.log(invitado)
 
       invitado.statusConfirmacion = data
 
