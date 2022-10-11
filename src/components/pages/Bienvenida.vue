@@ -1,0 +1,77 @@
+<template>
+    <div v-if="visibles.bienvenida" class="app-container">
+      <h1 class="title-handwrite pb-3" >The Day</h1>
+        <p>¡Bienvenido!</p>
+        
+        <div v-if="!isScanning">
+          <p>Por favor, digite su código de invitado: </p>
+
+          <v-form>
+              <v-text-field
+                  v-model="codigoInvitado"
+                  label="Código de invitado"
+                  color="#000"
+              ></v-text-field>
+
+              <p v-if="datosApp.respuesta.codigoInvitado == 'exito'"> 
+                Código enviado con éxito 
+              </p>
+
+              <p 
+                v-else-if="datosApp.respuesta.codigoInvitado == 'fallo'"
+                class="response-message"
+              > 
+                El código no es válido, revise su digitación 
+              </p>
+
+              <v-btn :plain="true" v-on:click="setInvitado()">Buscar invitado</v-btn>
+          </v-form>
+
+          <p class="py-3">o escanée el código QR de su invitación</p>
+          <v-btn :plain="true" v-on:click="isScanning = !isScanning">Escanear código</v-btn>
+        </div>
+        <div v-else>
+          <p>Escanee su código QR</p>
+
+          <LectorQR />
+
+          <p>o digite su código de invitado</p>
+          
+          <v-btn :plain="true" v-on:click="isScanning = !isScanning">Digitar código de invitado</v-btn>
+        </div>
+    </div>
+</template>
+
+<script>
+
+import { mapActions, mapState } from 'vuex'
+import LectorQR from '../pages/LectorQR'
+  
+    export default {
+      name: 'Home',
+
+      components: {
+        LectorQR
+      },
+  
+      data: () => ({
+        codigoInvitado: '',
+        isScanning: false,
+        msjRespuesta  : ''
+      }),
+
+      computed: {
+        ... mapState(['visibles', 'datosApp'])
+      },
+  
+      methods: {
+        ... mapActions(['getInvitadoById']),
+
+        async setInvitado() {
+          this.msjRespuesta = await this.getInvitadoById(this.codigoInvitado);
+          console.log(this.msjRespuesta);
+        },
+      }
+    }
+  </script>
+  
