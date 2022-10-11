@@ -233,17 +233,28 @@ export default new Vuex.Store({
 
     },
 
-    confirmacionAsistencia({commit}, data) {
-
+    async confirmacionAsistencia({commit}, data) {
       const payload = {
         visibilidad: false,
         statusConfirmacion: data
-      };
+      }
 
-      commit('setConfirmacionAsistencia', payload);
+      commit('setConfirmacionAsistencia', payload)
+
+      let invitado = state.state.datosApp.invitado
+
+      invitado.statusConfirmacion = data
+
+      await db
+          .collection("invitados")
+          .doc(invitado.idFirebase)
+          .update(invitado)
+          .then((snapshot) => {
+            return "success";
+      })
     },
 
-async numeroAsistentes(state, data) {
+    async numeroAsistentes(state, data) {
       let invitado = state.state.datosApp.invitado;
 
       invitado.totalAsistentes = data;
