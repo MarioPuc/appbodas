@@ -158,7 +158,6 @@ export default new Vuex.Store({
           .update(data)
           .then((snapshot) => {
             console.log("Evento actualizado");
-            getEvento(data.id);
           });
     },
 
