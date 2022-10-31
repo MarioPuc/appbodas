@@ -121,7 +121,6 @@
                             multiple
                             label="Subir invitación* (Mínimo requerido 1 archivo de hasta 800 KB)"
                             v-model="arrayPDF"
-                            
                             :show-size="1000"
                             prepend-icon="mdi-file-document-plus"
                             :error="docsError"
@@ -226,6 +225,81 @@
                       ></v-text-field>
                       </v-col>
 
+                    </v-row>
+
+                    <h2 class="text-left pt-6 pb-4">Estilos de la invitación</h2>
+
+                    <v-row>
+                      <v-col cols="6" class="text-left">
+                        <h2 >Opciones de Fuente</h2>
+                        <h3>Título</h3>
+
+                        <p 
+                        :style="`font-size:${evento.tamanoFuenteTitulo}px; font-family:${evento.fuenteTitulo}`"
+                        >Lorem ipsum</p>
+
+                        <v-row>
+                        <v-col cols="6">
+                          <v-select
+                            v-model="evento.fuenteTitulo"
+                            :items="opciones[0][0].estilos.fuentes"
+                            item-text="nombre"
+                            item-value="valor"
+                            label="Fuente"
+                            class="py-3"
+                          ></v-select>
+                        </v-col>
+
+                        <v-col cols="6">
+                          <v-text-field
+                            v-model="evento.tamanoFuenteTitulo"
+                            type="number"
+                            label="Tamaño de fuente"
+                            class="py-3"
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                        <h3>Cuerpo</h3>
+
+                        <p 
+                        :style="`font-size:${evento.tamanoFuenteCuerpo}px; font-family:${evento.fuenteCuerpo}`"
+                        >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eveniet ipsam quia officia nisi. Ad eius harum pariatur autem expedita cupiditate commodi fugiat rerum ullam, perspiciatis natus enim, quidem adipisci at.</p>
+                        <v-row>
+                        <v-col cols="6">
+                          <v-select
+                            v-model="evento.fuenteCuerpo"
+                            :items="opciones[0][0].estilos.fuentes"
+                            item-text="nombre"
+                            item-value="valor"
+                            label="Fuente"
+                            class="py-3"
+                          ></v-select>
+                        </v-col>
+
+                        <v-col cols="6">
+                          <v-text-field
+                            v-model="evento.tamanoFuenteCuerpo"
+                            type="number"
+                            label="Tamaño de fuente"
+                            class="py-3"
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                      </v-col>
+                      <v-col cols="6" >
+                        <v-img
+                          :src="`https://workspacedigiart.com/img/fondos/${evento.fondo}`"
+                          aspect-ratio="1"
+                          width="200px"
+                          class="grey lighten-2 ml-auto mr-auto"
+                        />
+
+                        <v-select
+                          v-model="evento.fondo"
+                          :items="opciones[0][0].estilos.fondos"
+                          label="Fondo"
+                        ></v-select>
+                      </v-col>
                     </v-row>
 
                     <v-btn color="red white--text my-5" v-on:click="actualizarEvento(evento)">Guardar cambios</v-btn>
@@ -414,7 +488,7 @@
     }),
 
     computed: {
-        ... mapState(['eventos', 'evento', 'invitados']),
+        ... mapState(['eventos', 'evento', 'opciones', 'invitados']),
 
         logged() {
             return localStorage.getItem("isLogged");
@@ -424,7 +498,7 @@
 
     methods: {
 
-      ... mapActions(['addEvento', 'getEvento', 'updateEvento', 'addInvitado', 'getInvitados', 'updateInvitado']),
+      ... mapActions(['addEvento', 'getEvento', 'getOpciones', 'updateEvento', 'addInvitado', 'getInvitados', 'updateInvitado']),
 
       actualizarEvento(evento) {
         this.updateEvento(evento);
@@ -461,6 +535,7 @@
       initialize(){
         this.getEvento(this.$route.params.id);
         this.getInvitados(this.$route.params.id);
+        this.getOpciones();
       },
 
       async subirImagenes(){

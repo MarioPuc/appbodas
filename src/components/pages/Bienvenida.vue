@@ -1,5 +1,14 @@
 <template>
-    <div v-if="visibles.bienvenida" class="app-container">
+  <div 
+    class="text-center theme-wedding"
+    :style="`background-image: url('https://workspacedigiart.com/img/fondos/fondoboda.jpeg');`"
+    v-if="visibles.bienvenida"
+  >
+    <div class="container full-height">
+        <v-container fill-height fluid>
+          <v-row align="center"
+              justify="center">
+    <div class="app-container">
       <h1 class="title-handwrite pb-3" >The Day</h1>
         <p>¡Bienvenido!</p>
         
@@ -24,11 +33,11 @@
                 El código no es válido, revise su digitación 
               </p>
 
-              <v-btn :plain="true" v-on:click="setInvitado()">Buscar invitado</v-btn>
+              <v-btn color="#E6C98A" class="white--text" tile elevation="0" v-on:click="setInvitado()">Buscar invitado</v-btn>
           </v-form>
 
           <p class="py-3">o escanée el código QR de su invitación</p>
-          <v-btn :plain="true" v-on:click="isScanning = !isScanning">Escanear código</v-btn>
+          <v-btn color="#E6C98A" class="white--text" tile elevation="0" v-on:click="isScanning = !isScanning">Escanear código</v-btn>
         </div>
         <div v-else>
           <p>Escanee su código QR</p>
@@ -37,9 +46,14 @@
 
           <p>o digite su código de invitado</p>
           
-          <v-btn :plain="true" v-on:click="isScanning = !isScanning">Digitar código de invitado</v-btn>
+          <v-btn class="wedding-button" v-on:click="isScanning = !isScanning">Digitar código de invitado</v-btn>
         </div>
     </div>
+
+        </v-row>
+      </v-container>
+    </div>
+  </div>
 </template>
 
 <script>

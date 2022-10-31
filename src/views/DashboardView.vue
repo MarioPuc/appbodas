@@ -2,9 +2,7 @@
     <div class="dashboard">
         <div class="container">
             <Navbar />
-
             <div v-if="logged === 'Logged'">
-
                 <v-container>
                     <h1>Dashboard</h1>
 
@@ -208,13 +206,11 @@
                           ></v-text-field>
                         </v-col>
                       </v-row>
-
                     </div>
 
                     <h2 class="text-left pt-6 pb-4">Datos del Cliente</h2>
 
                     <v-row clas="pb-2">
-                      
                       <v-col cols="6">
                         <v-text-field
                           label="Nombre del cliente*"
@@ -232,7 +228,72 @@
                           :rules="reglas.telefonoCliente"
                       ></v-text-field>
                       </v-col>
+                    </v-row>
 
+                    <h2 class="text-left pt-6 pb-4">Estilos de la invitación</h2>
+
+                    <v-row>
+                      <v-col cols="6" class="text-left">
+                        <h2 >Opciones de Fuente</h2>
+                        <h3>Título</h3>
+                        <v-row>
+                        <v-col cols="6">
+                          <v-select
+                            v-model="evento.fuenteTitulo"
+                            :items="opciones[0][0].estilos.fuentes"
+                            item-text="nombre"
+                            item-value="valor"
+                            label="Fuente"
+                            class="py-3"
+                          ></v-select>
+                        </v-col>
+
+                        <v-col cols="6">
+                          <v-text-field
+                            v-model="evento.tamanoFuenteTitulo"
+                            type="number"
+                            label="Tamaño de fuente"
+                            class="py-3"
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                        <h3>Cuerpo</h3>
+                        <v-row>
+                        <v-col cols="6">
+                          <v-select
+                            v-model="evento.fuenteCuerpo"
+                            :items="opciones[0][0].estilos.fuentes"
+                            item-text="nombre"
+                            item-value="valor"
+                            label="Fuente"
+                            class="py-3"
+                          ></v-select>
+                        </v-col>
+
+                        <v-col cols="6">
+                          <v-text-field
+                            v-model="evento.tamanoFuenteCuerpo"
+                            type="number"
+                            label="Tamaño de fuente"
+                            class="py-3"
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                      </v-col>
+                      <v-col cols="6" >
+                        <v-img
+                          :src="`https://workspacedigiart.com/img/fondos/${evento.fondo}`"
+                          aspect-ratio="1"
+                          width="200px"
+                          class="grey lighten-2 ml-auto mr-auto"
+                        />
+
+                        <v-select
+                          v-model="evento.fondo"
+                          :items="opciones[0][0].estilos.fondos"
+                          label="Fondo"
+                        ></v-select>
+                      </v-col>
                     </v-row>
 
                     <v-btn color="red white--text my-5" v-on:click="validacion">Agregar</v-btn>
@@ -273,16 +334,15 @@
                         </template>
                     </v-card>
                 </v-container>
-
+                <!--<div class="border border-red hidden">
+                  hola
+                  <Map />
+                </div>-->
             </div>
-
             <div v-else>
                 <MensajeBloqueo />
             </div>
-
-
         </div>
-
         <v-snackbar
             v-model="snackbar.open"
             :timeout="snackbar.timeout"
@@ -292,133 +352,144 @@
             top
             >
             {{ snackbar.text }}
-
         </v-snackbar>
-
     </div>
   </template>
   
   <script>
-    import { mapActions, mapState } from 'vuex';
-    import axios from "axios";
+import { mapActions, mapState } from 'vuex';
+import axios from "axios";
 
-    import Navbar from '@/components/Navbar.vue';
-    import MensajeBloqueo from '@/components/MensajeBloqueo.vue';
+import Map from '@/components/widgets/Map.vue';
+import MensajeBloqueo from '@/components/MensajeBloqueo.vue';
+import Navbar from '@/components/Navbar.vue';
 
-    export default {
-    name: 'Home',
+export default {
+  name: 'Home',
 
-    created() {
+  created() {
     this.initialize();
   },
 
-    components: {
-    Navbar,
-    MensajeBloqueo
-},
+  components: {
+    Map,
+    MensajeBloqueo,
+    Navbar
+  },
 
-    data: () => ({
-        arrayPDF: [],
-        banqueteras: ['Camino', 'Banquetera2', 'Banquetera3'],
-        docsError: false,
-        evento: {
-          ceremoniaAdicional: 'No',
-          codigoVestimenta: 'Formal',
-          tipoEvento: 'Boda Religiosa',
-          nombreEvento: '',
-          nombreCliente: '',
-          numeroInvitaciones: 0,
-          telefonoCliente: '',
-          fechaEvento: '',
-          docs: []
-        },
-        headers: [
-          {
-            text: 'Evento',
-            align: 'start',
-            sortable: false,
-            value: 'nombreEvento',
-          },
-          { text: 'Cliente', value: 'nombreCliente' },
-          { text: 'Telefono del cliente', value: 'telefonoCliente' },
-          { text: 'Fecha y hora del evento', value: 'fechaEvento' },
-          { text: 'Fecha de registro', value: 'fechaRegistro' },
-          { text: "Acciones", value: "actions", sortable: false },
-        ],
-        isCreating: false,
-        list: [],
-        snackbar: {
-            open: false,
-            text: "",
-            color: "green darken-1 white--text",
-            timeout: 3500,
-        },
-        objectDoc: {},
-        opcionesBoolean: [
-          'No',
-          'Si'
-        ],
-        opcionesCodigoVestimenta: [
-          'Formal',
-          'Semi Formal',
-          'Informal'
-        ],
-        planners: ['Marta Sosa', 'Otra'],
-        textDocsError: '',
-        tiposEventos: [
-          'Boda Religiosa',
-          'Boda Civil',
-          'Boda Civil y Religiosa',
-          'Boda Ceremonial',
-          'Graduación',
-          'Quince años',
-          'Bautizo',
-          'Primera Comunión',
-          'Evento Social',
-          'Otro'
-        ],
-        reglas: {
-          especifico: [
-            v => !!v || 'Especifique el tipo de evento'
-          ],
-          fechaCeremonia: [
-            v => !!v || 'La fecha de la ceremonia es requerida'
-          ],
-          fechaEvento: [
-            v => !!v || 'Se requiere la fecha del evento'
-          ],
-          horarioCeremonia: [
-            v => !!v || 'Se requiere la hora de la ceremonia'
-          ],
-          horaCeremoniaAdicional: [
-            v => !!v || 'Se requiere la hora de la ceremonia adicional'
-          ],
-          horaEvento: [
-            v => !!v || 'Se requiere la hora del evento'
-          ],
-          nombreCliente: [
-            v=> !!v || 'El nombre del cliente es requerido'
-          ],
-          nombreOwner: [
-            v => !!v || 'Se requiere el nombre de la pareja/familia o principal del evento'
-          ],
-          telefonoCliente: [
-            v=> !!v || 'El telefono del cliente es requerido'
-          ],
-          tipoEvento: [
-            v => !!v || 'El tipo de evento es requerido'
-          ]
-        },
-        statusValido: false
-    }),
-
-    computed: {
-        ... mapState(['eventos', 'respuestaAnadirEvento']),
-
-        logged() {
-            return localStorage.getItem("isLogged");
-        },
+  data: () => ({
+    arrayPDF: [],
+    banqueteras: ['Camino', 'Banquetera2', 'Banquetera3'],
+    docsError: false,
+    evento: {
+      ceremoniaAdicional: 'No',
+      codigoVestimenta: 'Formal',
+      tipoEvento: 'Boda Religiosa',
+      nombreEvento: '',
+      nombreCliente: '',
+      numeroInvitaciones: 0,
+      telefonoCliente: '',
+      fechaEvento: '',
+      docs: [],
+      fondo: 'fondoboda.jpeg',
+      fuenteTitulo: {
+        nombre: "Parisienne",
+        valor: "'Parisienne', cursive"
+      },
+      fuenteCuerpo: {
+        nombre: "Gilda Display",
+        valor: "'Gilda Display', serif"
+      },
+      tamanoFuenteTitulo: 30,
+      tamanoFuenteCuerpo: 15
     },
+    headers: [
+      {
+        text: 'Evento',
+        align: 'start',
+        sortable: false,
+        value: 'nombreEvento',
+      },
+      { text: 'Cliente', value: 'nombreCliente' },
+      { text: 'Telefono del cliente', value: 'telefonoCliente' },
+      { text: 'Fecha y hora del evento', value: 'fechaEvento' },
+      { text: 'Fecha de registro', value: 'fechaRegistro' },
+      { text: "Acciones", value: "actions", sortable: false },
+    ],
+    isCreating: false,
+    list: [],
+    snackbar: {
+      open: false,
+      text: "",
+      color: "green darken-1 white--text",
+      timeout: 3500,
+    },
+    objectDoc: {},
+    opcionesBoolean: [
+      'No',
+      'Si'
+    ],
+    opcionesCodigoVestimenta: [
+      'Formal',
+      'Semi Formal',
+      'Informal'
+    ],
+    planners: ['Marta Sosa', 'Otra'],
+    textDocsError: '',
+    tiposEventos: [
+      'Boda Religiosa',
+      'Boda Civil',
+      'Boda Civil y Religiosa',
+      'Boda Ceremonial',
+      'Graduación',
+      'Quince años',
+      'Bautizo',
+      'Primera Comunión',
+      'Evento Social',
+      'Otro'
+    ],
+    reglas: {
+      especifico: [
+        v => !!v || 'Especifique el tipo de evento'
+      ],
+      fechaCeremonia: [
+        v => !!v || 'La fecha de la ceremonia es requerida'
+      ],
+      fechaEvento: [
+        v => !!v || 'Se requiere la fecha del evento'
+      ],    
+      horarioCeremonia: [
+        v => !!v || 'Se requiere la hora de la ceremonia'
+      ],    
+      horaCeremoniaAdicional: [
+        v => !!v || 'Se requiere la hora de la ceremonia adicional'
+      ],    
+      horaEvento: [
+        v => !!v || 'Se requiere la hora del evento'
+      ],
+      nombreCliente: [
+        v=> !!v || 'El nombre del cliente es requerido'
+      ],
+      nombreOwner: [
+        v => !!v || 'Se requiere el nombre de la pareja/familia o principal del evento'
+      ],
+      telefonoCliente: [
+        v=> !!v || 'El telefono del cliente es requerido'
+      ],
+      tipoEvento: [
+        v => !!v || 'El tipo de evento es requerido'
+      ]
+    },
+    statusValido: false
+  }),
+
+  computed: {
+    ... mapState(['eventos', 'opciones', 'respuestaAnadirEvento']),
+
+    logged() {
+      return localStorage.getItem("isLogged");
+    },
+  },
 
     watch: {
       respuestaAnadirEvento(nuevaRespuesta, respuestaAnterior) {
@@ -435,7 +506,7 @@
 
     methods: {
 
-      ... mapActions(['addEvento', 'getEventos']),
+      ... mapActions(['addEvento', 'getEventos', 'getOpciones']),
       
       agregarEvento() {
         this.addEvento(this.evento);
@@ -443,6 +514,7 @@
 
       initialize(){
         this.getEventos();
+        this.getOpciones();
       },
 
       async subirImagenes(){

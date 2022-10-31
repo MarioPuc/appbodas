@@ -1,4 +1,13 @@
 <template>
+  <div 
+    class="text-center theme-wedding"
+    :style="`background-image: url('https://workspacedigiart.com/img/fondos/${this.datosApp.evento.fondo}');`"
+    v-if="(visibles.bienvenida == false && visibles.confirmacionAsistencia == false)"
+  >
+    <div class="container full-height">
+        <v-container fill-height fluid>
+          <v-row align="center"
+              justify="center">
     <div class="app-container" >
       <div v-if="visibleAsistentes">
         <div v-if="visibles.asistencia == 'si'"> 
@@ -11,13 +20,20 @@
               <p>¿Podría decirnos cuantos <br /> asistentes serán?</p>
 
               <v-form>
-                <v-text-field
+                <v-select
                     v-model="totalAsistentes"
                     label="Número de asistentes"
+                    :items="arrayAsistentes"
                     color="#000"
-                ></v-text-field>
+                ></v-select>
 
-                <v-btn :plain="true" v-on:click="setNumeroAsistentes()">Añadir número de invitados</v-btn>
+                <v-btn
+                  color="#E6C98A"
+                  class="white--text"
+                  tile
+                  elevation="0"
+                  v-on:click="setNumeroAsistentes()"
+                >Añadir número de invitados</v-btn>
               </v-form>
             </div>
             
@@ -31,20 +47,26 @@
             antes del:
           </p>
 
-          <p class="pt-4 subtext"> 12 de abril de 2023 a las 23:00 hrs</p>
+          <p class="pt-4 subtext"> {{ deadline }} a las 23:00 hrs</p>
         </div>
       </div>
       <div v-else>
         <h1>Te esperamos</h1>
 
-        <p>Ultimo texto de despedida</p>
-      </div>
+        <p></p>
+            </div>
+          </div>
+        </v-row>
+      </v-container>
     </div>
+  </div>
 </template>
 
 <script>
 
 import { mapActions, mapState } from 'vuex';
+
+import * as moment from 'moment';
   
     export default {
       name: 'Home',
@@ -53,12 +75,23 @@ import { mapActions, mapState } from 'vuex';
       },
   
       data: () => ({
-        visibleAsistentes: true,
-        totalAsistentes: "" 
+        totalAsistentes: "0",
+        visibleAsistentes: true
       }),
 
       computed: {
-        ... mapState(['visibles'])
+        ... mapState(['visibles', 'datosApp']),
+        deadline() {
+          moment.locale('es-mx');
+          return moment(this.datosApp.evento.fechaEvento).subtract(2, 'months').format('LL');
+        },
+        arrayAsistentes() {
+          let arrayRespuesta = [];
+          for( let i = 1; i <= this.datosApp.invitado.totalAsistentes; i++  ) {
+            arrayRespuesta.push(i);
+          }
+          return arrayRespuesta;
+        }
       },
   
       methods: {

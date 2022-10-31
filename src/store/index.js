@@ -13,6 +13,7 @@ export default new Vuex.Store({
     evento: {},
     eventos: [],
     invitados: [],
+    opciones: [],
     respuestaAnadirEvento: "",
     visibles: {
       bienvenida: true,
@@ -46,6 +47,9 @@ export default new Vuex.Store({
     },
     setEventos(state, valor) {
       state.eventos.push(valor);
+    },
+    setOpciones(state, valor) {
+      state.opciones.push(valor);
     },
     setInvitadoApp(state, valor) {
       state.datosApp.invitado = valor;
@@ -81,9 +85,23 @@ export default new Vuex.Store({
       }
     },
 
+    async getOpciones({commit}) {
+      let opciones = [];
+
+        await db
+          .collection("opciones")
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.forEach((doc) => opciones.push(doc.data())); 
+            commit('setOpciones', opciones);
+        });
+    },
+
     async getEvento({commit}, data) {
       let evento = {};
       const idRuta = data;
+
+      console.log("desde get evento", idRuta);
 
         await db
           .collection("eventos")
@@ -268,7 +286,6 @@ export default new Vuex.Store({
             console.log("Invitado actualizado");
             return "success";
       });
-
     }
 
   },

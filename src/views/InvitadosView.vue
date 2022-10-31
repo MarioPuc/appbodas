@@ -1,21 +1,9 @@
 <template>
-  <div class="text-center theme-wedding">
-    <div class="container full-height">
-        <v-container fill-height fluid>
-          <v-row align="center"
-              justify="center">
-              <div>
-          
-                <Bienvenida />
-                <ConfirmacionAsistencia />
-                <Asistencia />
-
-              </div>
-          </v-row>
-        </v-container>
-    </div>
+  <div>
+    <Bienvenida />
+    <ConfirmacionAsistencia />
+    <Asistencia />
   </div>
-
 </template>
 
 <script>

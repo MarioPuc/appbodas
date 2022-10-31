@@ -71,8 +71,7 @@
         drawer: false,
         drawer2: false,
         links: [
-            { to: "/dashboard", name: "Dashboard" },
-            { to: "/agregar-evento", name: "Agregar evento" }
+            { to: "/dashboard", name: "Dashboard" }
         ],
 
     }),

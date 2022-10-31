@@ -19,5 +19,5 @@ export default {
 
 <style>
   @import './assets/styles/styles.css';
-  @import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Gilda+Display&family=Parisienne&family=Work+Sans:ital,wght@0,300;1,200&display=swap');
 </style>
