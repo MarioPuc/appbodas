@@ -11,12 +11,12 @@
           <div class="app-container">
             <p
               class="pb-4" 
-              :style="`font-size:${this.datosApp.evento.tamanoFuenteTitulo}px; font-family:${this.datosApp.evento.fuenteTitulo}`"> 
+              :style="`font-size:${this.datosApp.evento.tamanoFuenteTitulo}px; font-family:${this.datosApp.evento.fuenteTitulo}; color:${this.datosApp.evento.colorFuenteTitulo}`"> 
                 {{ this.datosApp.evento.nombreOwner }}
           </p>
 
             <p
-            :style="`font-size:${this.datosApp.evento.tamanoFuenteCuerpo}px; font-family:${this.datosApp.evento.fuenteCuerpo}`"
+            :style="`font-size:${this.datosApp.evento.tamanoFuenteCuerpo}px; font-family:${this.datosApp.evento.fuenteCuerpo}; color:${this.datosApp.evento.colorFuenteCuerpo}`"
             >Le(s) han invitado a su boda, por favor confirme su asistencia. 
               Sería muy grato para los novios saber su confirmación. </p>
                   

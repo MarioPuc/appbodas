@@ -8,7 +8,12 @@
                 <v-container>
                     <h1>Detalles del Evento</h1>
                     
-                    <v-form class="py-10 text-right" >
+                    <v-form
+                      ref="form"
+                      v-model="statusValido"
+                      lazy-validation
+                      class="py-10 text-right"
+                    >
                       <h2 class="text-left">Editar evento</h2>
 
                       <h2 class="text-left py-4">Datos del Evento</h2>
@@ -137,7 +142,13 @@
                           </li>
                         </ul>
                       </v-col>
-
+                      
+                      <v-col cols="6">
+                        <v-checkbox
+                          v-model="evento.soloAdultos"
+                          label="Sólo adultos"
+                        ></v-checkbox>
+                      </v-col>
                     </v-row>
 
                     <div>
@@ -235,14 +246,14 @@
                         <h3>Título</h3>
 
                         <p 
-                        :style="`font-size:${evento.tamanoFuenteTitulo}px; font-family:${evento.fuenteTitulo}`"
+                        :style="`font-size:${evento.tamanoFuenteTitulo}px; font-family:${evento.fuenteTitulo}; color:${evento.colorFuenteTitulo}`"
                         >Lorem ipsum</p>
 
                         <v-row>
                         <v-col cols="6">
                           <v-select
                             v-model="evento.fuenteTitulo"
-                            :items="opciones[0][0].estilos.fuentes"
+                            :items="opciones[0].estilos.fuentes"
                             item-text="nombre"
                             item-value="valor"
                             label="Fuente"
@@ -258,17 +269,28 @@
                             class="py-3"
                           ></v-text-field>
                         </v-col>
+
+                        <v-col cols="6">
+                          <v-select
+                            v-model="evento.colorFuenteTitulo"
+                            :items="opciones[0].estilos.coloresFuentes"
+                            item-text="nombre"
+                            item-value="valor"
+                            label="Color de fuente del título"
+                            class="py-3"
+                          ></v-select>
+                        </v-col>
                       </v-row>
                         <h3>Cuerpo</h3>
 
                         <p 
-                        :style="`font-size:${evento.tamanoFuenteCuerpo}px; font-family:${evento.fuenteCuerpo}`"
+                        :style="`font-size:${evento.tamanoFuenteCuerpo}px; font-family:${evento.fuenteCuerpo}; color:${evento.colorFuenteCuerpo}`"
                         >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eveniet ipsam quia officia nisi. Ad eius harum pariatur autem expedita cupiditate commodi fugiat rerum ullam, perspiciatis natus enim, quidem adipisci at.</p>
                         <v-row>
                         <v-col cols="6">
                           <v-select
                             v-model="evento.fuenteCuerpo"
-                            :items="opciones[0][0].estilos.fuentes"
+                            :items="opciones[0].estilos.fuentes"
                             item-text="nombre"
                             item-value="valor"
                             label="Fuente"
@@ -284,6 +306,17 @@
                             class="py-3"
                           ></v-text-field>
                         </v-col>
+
+                        <v-col cols="6">
+                          <v-select
+                            v-model="evento.colorFuenteCuerpo"
+                            :items="opciones[0].estilos.coloresFuentes"
+                            item-text="nombre"
+                            item-value="valor"
+                            label="Color de fuente del cuerpo"
+                            class="py-3"
+                          ></v-select>
+                        </v-col>
                       </v-row>
                       </v-col>
                       <v-col cols="6" >
@@ -296,7 +329,7 @@
 
                         <v-select
                           v-model="evento.fondo"
-                          :items="opciones[0][0].estilos.fondos"
+                          :items="opciones[0].estilos.fondos"
                           label="Fondo"
                         ></v-select>
                       </v-col>
@@ -309,7 +342,11 @@
                     <v-card class="px-8 py-6">
                         <h1>Invitados</h1>
 
-                        <v-form class="py-10 text-right" >
+                        <v-form 
+                          ref="form"
+                          v-model="statusValidoInvitado"
+                          lazy-validation class="py-10 text-right"
+                        >
                       <h2 class="text-left" v-if="!isEditing">Agregar invitado</h2>
                       <h2 class="text-left" v-else>Editar invitado</h2>
 
@@ -319,6 +356,7 @@
                         label="Nombre del invitado"
                         hide-details="auto"
                         v-model="invitado.nombreInvitado"
+                        
                         ></v-text-field>
                       </v-col>
 
@@ -327,21 +365,34 @@
                         label="Teléfono del invitado"
                         hide-details="auto"
                         v-model="invitado.telefonoInvitado"
+                        :rules="reglas.telefonoInvitado"
                         ></v-text-field>
                       </v-col>
 
                       <v-col cols="4">
                         <v-text-field
-                        label="Total de asistentes"
+                        label="Total asistentes"
+                        type="number"
+                        min="1"
                         hide-details="auto"
                         v-model="invitado.totalAsistentes"
+                        :rules="reglas.totalAsistentes"
                         ></v-text-field>
                       </v-col>
 
+                      <v-col cols="4">
+                        <v-text-field
+                          label="Número de mesa"
+                          type="number"
+                          min="1"
+                          hide-details="auto"
+                          v-model="invitado.numeroMesa"
+                        ></v-text-field>
+                      </v-col>
                     </v-row>
 
-                    <v-btn color="red white--text" v-on:click="agregarInvitado()" v-if="!isEditing">Agregar Invitado</v-btn>
-                    <v-btn color="red white--text" v-on:click="actualizarInvitado()" v-else>Actualizar Invitado</v-btn>
+                    <v-btn color="red white--text" v-on:click="validacionInvitadoAdd()" v-if="!isEditing">Agregar Invitado</v-btn>
+                    <v-btn color="red white--text" v-on:click="validacionInvitadoUpdate()" v-else>Actualizar Invitado</v-btn>
 
                     </v-form>
 
@@ -373,7 +424,6 @@
                         </template>
                     </v-card>
                 </v-container>
-
             </div>
 
             <div v-else>
@@ -382,6 +432,19 @@
 
 
         </div>
+
+        <v-snackbar
+            v-model="snackbar.open"
+            :timeout="snackbar.timeout"
+            :color="snackbar.color"
+            fixed
+            right
+            top
+            >
+            {{ snackbar.text }}
+        </v-snackbar>
+
+        <Map />
     </div>
   </template>
   
@@ -391,8 +454,8 @@
     import axios from "axios";
 
     import Navbar from '@/components/Navbar.vue';
+    import Map from '@/components/widgets/Map.vue'
     import MensajeBloqueo from '@/components/MensajeBloqueo.vue';
-
 
     export default {
     name: 'Home',
@@ -403,6 +466,7 @@
 
     components: {
     Navbar,
+    Map,
     MensajeBloqueo
 },
 
@@ -413,14 +477,17 @@
         isCreating: false,
         isEditing: false,
 
-        invitado: {},
-
         headers: [
           { text: 'Nombre del invitado', value: 'nombreInvitado' },
           { text: 'Telefono del invitado', value: 'telefonoInvitado' },
           { text: 'Numero total de asistentes', value: 'totalAsistentes' },
+          { text: 'Número de mesa', value: 'numeroMesa' },
           { text: "Acciones", value: "actions", sortable: false },
         ],
+        invitado: {
+          totalAsistentes: 1,
+          numeroMesa: 1
+        },
         list: [],
         snackbar: {
             open: false,
@@ -435,7 +502,7 @@
         ],
         opcionesCodigoVestimenta: [
           'Formal',
-          'Semi Formal',
+          'Cóctel',
           'Informal'
         ],
         planners: ['Marta Sosa', 'Otra'],
@@ -482,19 +549,42 @@
           ],
           tipoEvento: [
             v => !!v || 'El tipo de evento es requerido'
+          ],
+          nombreInvitado: [
+            v => !!v || 'El nombre del invitado es requerido'
+          ],
+          telefonoInvitado: [
+            v=> !!v || 'El telefono del cliente es requerido'
+          ],
+          totalAsistentes: [
+            v=> !!v || 'El número de mesa es requerido'
           ]
         },
-        statusValido: false
+        statusValido: false,
+        statusValidoInvitado: false
     }),
 
     computed: {
-        ... mapState(['eventos', 'evento', 'opciones', 'invitados']),
+        ... mapState([ 'evento', 'eventos', 'invitados', 'opciones', 'respuestaEditarEvento']),
 
         logged() {
             return localStorage.getItem("isLogged");
         },
     },
 
+    watch: {
+      respuestaEditarEvento(nuevaRespuesta, respuestaAnterior) {
+        if (nuevaRespuesta != respuestaAnterior && nuevaRespuesta == 'exito') {
+          console.log("desde el watch de respuesta");
+          this.snackbar.text = "El evento se ha modificado con exito";
+          this.snackbar.open =  true;
+          setTimeout(() => {
+            //this.snackbar.text = "";
+            window.location.reload(true);
+          }, 4000);
+        }
+      }
+    },
 
     methods: {
 
@@ -575,6 +665,12 @@
       },
       validacion() {
         this.$refs.form.validate() ? this.agregarEvento() : null ;
+      },
+      validacionInvitadoAdd() {
+        this.$refs.form.validate() ? this.agregarInvitado() : null ;
+      },
+      validacionInvitadoUpdate() {
+        this.$refs.form.validate() ? this.actualizarInvitado() : null ;
       },
       validacionArrayPDF() {
         return this.evento.docs.length != 0 ? true : 'Agregue un invitación para su evento'

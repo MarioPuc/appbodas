@@ -90,11 +90,7 @@
                       </v-col>
 
                       <v-col cols="6">
-                        <v-text-field
-                          label="Locación del evento*"
-                          hide-details="auto"
-                          v-model="evento.locacionEvento"
-                        ></v-text-field>
+                        <Map />
                       </v-col>
 
                       <v-col cols="6">
@@ -144,6 +140,12 @@
                         </ul>
                       </v-col>
 
+                      <v-col cols="6">
+                        <v-checkbox
+                          v-model="evento.soloAdultos"
+                          label="Sólo adultos"
+                        ></v-checkbox>
+                      </v-col>
                     </v-row>
 
                     <div>
@@ -236,11 +238,16 @@
                       <v-col cols="6" class="text-left">
                         <h2 >Opciones de Fuente</h2>
                         <h3>Título</h3>
+
+                        <p 
+                        :style="`font-size:${evento.tamanoFuenteTitulo}px; font-family:${evento.fuenteTitulo}; color:${evento.colorFuenteTitulo}`"
+                        >Lorem ipsum</p>
+
                         <v-row>
                         <v-col cols="6">
                           <v-select
                             v-model="evento.fuenteTitulo"
-                            :items="opciones[0][0].estilos.fuentes"
+                            :items="opciones[0].estilos.fuentes"
                             item-text="nombre"
                             item-value="valor"
                             label="Fuente"
@@ -256,13 +263,28 @@
                             class="py-3"
                           ></v-text-field>
                         </v-col>
+
+                        <v-col cols="6">
+                          <v-select
+                            v-model="evento.colorFuenteTitulo"
+                            :items="opciones[0].estilos.coloresFuentes"
+                            item-text="nombre"
+                            item-value="valor"
+                            label="Color de fuente del título"
+                            class="py-3"
+                          ></v-select>
+                        </v-col>
                       </v-row>
                         <h3>Cuerpo</h3>
+
+                        <p 
+                        :style="`font-size:${evento.tamanoFuenteCuerpo}px; font-family:${evento.fuenteCuerpo}; color:${evento.colorFuenteCuerpo}`"
+                        >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eveniet ipsam quia officia nisi. Ad eius harum pariatur autem expedita cupiditate commodi fugiat rerum ullam, perspiciatis natus enim, quidem adipisci at.</p>
                         <v-row>
                         <v-col cols="6">
                           <v-select
                             v-model="evento.fuenteCuerpo"
-                            :items="opciones[0][0].estilos.fuentes"
+                            :items="opciones[0].estilos.fuentes"
                             item-text="nombre"
                             item-value="valor"
                             label="Fuente"
@@ -278,6 +300,17 @@
                             class="py-3"
                           ></v-text-field>
                         </v-col>
+
+                        <v-col cols="6">
+                          <v-select
+                            v-model="evento.colorFuenteCuerpo"
+                            :items="opciones[0].estilos.coloresFuentes"
+                            item-text="nombre"
+                            item-value="valor"
+                            label="Color de fuente del cuerpo"
+                            class="py-3"
+                          ></v-select>
+                        </v-col>
                       </v-row>
                       </v-col>
                       <v-col cols="6" >
@@ -290,7 +323,7 @@
 
                         <v-select
                           v-model="evento.fondo"
-                          :items="opciones[0][0].estilos.fondos"
+                          :items="opciones[0].estilos.fondos"
                           label="Fondo"
                         ></v-select>
                       </v-col>
@@ -381,28 +414,6 @@ export default {
     arrayPDF: [],
     banqueteras: ['Camino', 'Banquetera2', 'Banquetera3'],
     docsError: false,
-    evento: {
-      ceremoniaAdicional: 'No',
-      codigoVestimenta: 'Formal',
-      tipoEvento: 'Boda Religiosa',
-      nombreEvento: '',
-      nombreCliente: '',
-      numeroInvitaciones: 0,
-      telefonoCliente: '',
-      fechaEvento: '',
-      docs: [],
-      fondo: 'fondoboda.jpeg',
-      fuenteTitulo: {
-        nombre: "Parisienne",
-        valor: "'Parisienne', cursive"
-      },
-      fuenteCuerpo: {
-        nombre: "Gilda Display",
-        valor: "'Gilda Display', serif"
-      },
-      tamanoFuenteTitulo: 30,
-      tamanoFuenteCuerpo: 15
-    },
     headers: [
       {
         text: 'Evento',
@@ -431,7 +442,7 @@ export default {
     ],
     opcionesCodigoVestimenta: [
       'Formal',
-      'Semi Formal',
+      'Cóctel',
       'Informal'
     ],
     planners: ['Marta Sosa', 'Otra'],
@@ -484,7 +495,7 @@ export default {
   }),
 
   computed: {
-    ... mapState(['eventos', 'opciones', 'respuestaAnadirEvento']),
+    ... mapState(['eventos', 'evento', 'opciones', 'respuestaAnadirEvento']),
 
     logged() {
       return localStorage.getItem("isLogged");

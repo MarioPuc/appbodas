@@ -71,7 +71,8 @@
         drawer: false,
         drawer2: false,
         links: [
-            { to: "/dashboard", name: "Dashboard" }
+            { to: "/dashboard", name: "Dashboard" },
+            { to: "/empresas", name: "Empresas" }
         ],
 
     }),

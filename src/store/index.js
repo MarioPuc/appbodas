@@ -10,11 +10,43 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    evento: {},
+    empresa: {},
+    empleados: [],
+    empresas: [],
+    evento: {
+      ceremoniaAdicional: 'No',
+      codigoVestimenta: 'Formal',
+      tipoEvento: 'Boda Religiosa',
+      nombreEvento: '',
+      nombreCliente: '',
+      numeroInvitaciones: 0,
+      telefonoCliente: '',
+      fechaEvento: '',
+      docs: [],
+      soloAdultos: false,
+      fondo: 'fondoboda.jpeg',
+      fuenteTitulo: "'Parisienne', cursive",
+      fuenteCuerpo: "'Gilda Display', serif",
+      tamanoFuenteTitulo: 30,
+      tamanoFuenteCuerpo: 15,
+      colorFuenteTitulo: "#333",
+      colorFuenteCuerpo: "#333"
+    },
     eventos: [],
     invitados: [],
-    opciones: [],
+    opciones: [
+        {
+          "estilos": {
+            "fuentes": [],
+            "coloresFuentes": [],
+            "fondos": [],
+            "idFirebase": ""
+          }
+        }
+    ],
     respuestaAnadirEvento: "",
+    respuestaAnadirEmpresa: "",
+    respuestaEditarEvento: "",
     visibles: {
       bienvenida: true,
       confirmacionAsistencia: true,
@@ -39,6 +71,15 @@ export default new Vuex.Store({
       state.visibles.asistencia = valor.statusConfirmacion;
       state.datosApp.invitado.statusConfirmacion = valor.statusConfirmacion;
     },
+    setEmpleados(state, valor) {
+      state.empleados = valor;
+    },
+    setEmpresa(state, valor) {
+      state.empresa = valor;
+    },
+    setEmpresas(state, valor) {
+      state.empresas.push(valor);
+    },
     setEvento(state, valor) {
       state.evento = valor;
     },
@@ -49,7 +90,7 @@ export default new Vuex.Store({
       state.eventos.push(valor);
     },
     setOpciones(state, valor) {
-      state.opciones.push(valor);
+      state.opciones = valor;
     },
     setInvitadoApp(state, valor) {
       state.datosApp.invitado = valor;
@@ -62,7 +103,13 @@ export default new Vuex.Store({
     },
     setRespuestaAnadirEvento(state, valor) {
       state.respuestaAnadirEvento = valor;
-    }
+    },
+    setRespuestaAnadirEmpresa(state, valor) {
+      state.respuestaAnadirEmpresa = valor;
+    },
+    setRespuestaEditarEvento(state, valor) {
+      state.respuestaEditarEvento = valor;
+    },
   },
   actions: {
     async getEventos({commit}) {
@@ -82,6 +129,26 @@ export default new Vuex.Store({
       } else {
         list = JSON.parse(sessionEventos);
         commit('setEventos', list);
+      }
+    },
+
+    async getEmpresas({commit}) {
+      let list = [];
+      let sessionEmpresas = localStorage.getItem('empresas');
+
+      if(sessionEmpresas == null || sessionEmpresas == undefined){
+        await db
+          .collection("empresas")
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.forEach((doc) => list.push(doc.data())); 
+            commit('setEmpresas', list);
+            localStorage.setItem('empresas', JSON.stringify(list));
+        });
+
+      } else {
+        list = JSON.parse(sessionEmpresas);
+        commit('setEmpresas', list);
       }
     },
 
@@ -114,6 +181,23 @@ export default new Vuex.Store({
         });
     },
 
+    async getEmpresa({commit}, data) {
+      let empresa = {};
+      const idRuta = data;
+
+      console.log("desde get empresa", idRuta);
+
+        await db
+          .collection("empresas")
+          .where("id", "==", idRuta)
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.forEach((doc) => empresa = doc.data()); 
+            commit('setEmpresa', empresa);
+            localStorage.setItem('empresa', JSON.stringify(empresa));
+        });
+    },
+
     async getInvitados({commit}, data) {
       let invitados = [];
       const idRuta = data;
@@ -125,6 +209,21 @@ export default new Vuex.Store({
           .then((snapshot) => {
             snapshot.docs.forEach((doc) => invitados.push(doc.data())); 
             commit('setInvitados', invitados);
+            //localStorage.setItem('evento', JSON.stringify(evento));
+        }); 
+    },
+
+    async getEmpleados({commit}, data) {
+      let empleados = [];
+      const idRuta = data;
+
+        await db
+          .collection("empleados")
+          .where("idEmpresa", "==", idRuta)
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.forEach((doc) => empleados.push(doc.data())); 
+            commit('setEmpleados', empleados);
             //localStorage.setItem('evento', JSON.stringify(evento));
         }); 
     },
@@ -162,7 +261,40 @@ export default new Vuex.Store({
           });
     },
 
-    async updateEvento(state, data) {
+    async addEmpresa({commit}, data) {
+      let idFirebase = "";
+      let fechaHoy = moment().format('DD/MM/YYYY');
+      let horaHoy =  moment().format('LT');
+
+      data.fechaRegistro = fechaHoy;
+      data.horaRegistro = horaHoy;
+      data.id = generateRandomId();
+
+      await db
+          .collection("empresas")
+          .add(data)
+          .then( async (snapshot) => {
+            console.log("Empresa agregada");
+            data.idFirebase = snapshot.id;
+
+            let stringEmpresa = localStorage.getItem('empresas');
+            let empresas = JSON.parse(stringEmpresa);
+            empresas.unshift(data);
+            localStorage.setItem('empresas', JSON.stringify(empresas));
+            commit('setEmpresas', empresas);
+            
+            await db
+            .collection("empresas")
+            .doc(data.idFirebase)
+            .update(data)
+            .then((snapshot) => {
+              console.log("Empresa actualizada");
+              commit('setRespuestaAnadirEmpresa', 'exito');
+            });
+          });
+    },
+
+    async updateEvento({commit}, data) {
 
       let fechaHoy = moment().format('DD/MM/YYYY');
       let horaHoy =  moment().format('LT');
@@ -176,6 +308,24 @@ export default new Vuex.Store({
           .update(data)
           .then((snapshot) => {
             console.log("Evento actualizado");
+            commit('setRespuestaEditarEvento', 'exito');
+          });
+    },
+
+    async updateEmpresa(state, data) {
+
+      let fechaHoy = moment().format('DD/MM/YYYY');
+      let horaHoy =  moment().format('LT');
+
+      data.fechaActualizacion = fechaHoy;
+      data.horaActualizacion = horaHoy;
+
+      await db
+          .collection("empresas")
+          .doc(data.idFirebase)
+          .update(data)
+          .then((snapshot) => {
+            console.log("Empresa actualizada");
           });
     },
 
@@ -190,13 +340,23 @@ export default new Vuex.Store({
           });
     },
 
-    async addInvitado(state, data) {
+    async updateEmpleado(state, data) {
+      await db
+          .collection("empleados")
+          .doc(data.idFirebase)
+          .update(data)
+          .then((snapshot) => {
+            console.log("Empleado actualizado");
+            return "success";
+          });
+    },
 
+    async addInvitado(state, data) {
       await db
           .collection("invitados")
           .add(data)
           .then( async (snapshot) => {
-            console.log("Evento agregado");
+            console.log("Invitado agregado");
             data.idFirebase = snapshot.id;
             data.idInvitado = generateRandomId();
             
@@ -208,11 +368,28 @@ export default new Vuex.Store({
               console.log("Invitados actualizado");
               window.location.reload(true);
             });
-
           });
     },
 
-    //Cambiar los estados de el store para mostrar las pantallas al invitado
+    async addEmpleado(state, data) {
+      await db
+          .collection("empleados")
+          .add(data)
+          .then( async (snapshot) => {
+            console.log("Empleado agregado");
+            data.idFirebase = snapshot.id;
+            data.idEmpleado = generateRandomId();
+            
+            await db
+            .collection("empleados")
+            .doc(data.idFirebase)
+            .update(data)
+            .then((snapshot) => {
+              console.log("Empleados actualizado");
+              window.location.reload(true);
+            });
+          });
+    },
 
     async getInvitadoById({commit}, data) {
 
