@@ -84,11 +84,7 @@
                       </v-col>
 
                       <v-col cols="6">
-                        <v-text-field
-                          label="Locación del evento*"
-                          hide-details="auto"
-                          v-model="evento.locacionEvento"
-                        ></v-text-field>
+                        <Map tipoUbicacion="evento"/>
                       </v-col>
 
                       <v-col cols="6">
@@ -157,11 +153,7 @@
 
                       <v-row>
                         <v-col cols="6">
-                          <v-text-field
-                            label="Lugar de la misa / ceremonia*"
-                            hide-details="auto"
-                            v-model="evento.locacionCeremonia"
-                          ></v-text-field>
+                          <Map tipoUbicacion="ceremonia"/>
                         </v-col>
 
                         <v-col cols="6">
@@ -194,11 +186,7 @@
                         </v-col>
                         
                         <v-col cols="6" v-if="evento.ceremoniaAdicional == 'Si'">
-                          <v-text-field
-                            label="Locación de la ceremonia adicional*"
-                            hide-details="auto"
-                            v-model="evento.locacionCeremoniaAdicional"
-                          ></v-text-field>
+                          <Map tipoUbicacion="ceremoniaAdicional"/>
                         </v-col>
 
                         <v-col cols="6" v-if="evento.ceremoniaAdicional == 'Si'">
@@ -443,8 +431,6 @@
             >
             {{ snackbar.text }}
         </v-snackbar>
-
-        <Map />
     </div>
   </template>
   

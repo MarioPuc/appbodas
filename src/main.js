@@ -19,7 +19,7 @@ new Vue({
 Vue.use(GmapVue, {
   load: {
     // [REQUIRED] This is the unique required value by Google Maps API
-    key: 'AIzaSyABXuHkmC6AFhSCockwee6AOWDxb7CYKZI',
+    key: 'AIzaSyAdYn5_zpxAdYiHfJc7f0w4hGnUK32BkYc',
     // [OPTIONAL] This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'

@@ -30,7 +30,19 @@ export default new Vuex.Store({
       tamanoFuenteTitulo: 30,
       tamanoFuenteCuerpo: 15,
       colorFuenteTitulo: "#333",
-      colorFuenteCuerpo: "#333"
+      colorFuenteCuerpo: "#333",
+      locacionEvento: {
+        lat: 20.967298,
+        lng:-89.623639
+      }, 
+      locacionCeremonia: {
+        lat: 20.967298,
+        lng:-89.623639
+      },
+      locacionCeremoniaAdicional: {
+        lat: 20.967298,
+        lng:-89.623639
+      }
     },
     eventos: [],
     invitados: [],
@@ -88,6 +100,15 @@ export default new Vuex.Store({
     },
     setEventos(state, valor) {
       state.eventos.push(valor);
+    },
+    setLocation(state, valor) {
+      state.evento.locacionEvento = valor;
+    },
+    setLocationCeremony(state, valor) {
+      state.evento.locacionCeremonia = valor;
+    },
+    setLocationCeremonyAdd(state, valor) {
+      state.evento.locacionCeremoniaAdicional = valor;
     },
     setOpciones(state, valor) {
       state.opciones = valor;
@@ -292,6 +313,19 @@ export default new Vuex.Store({
               commit('setRespuestaAnadirEmpresa', 'exito');
             });
           });
+    },
+
+    async updateLocation({commit}, data) {
+      const coordinates = data[0];
+      const type = data[1];
+      if (type == 'evento') {
+        commit('setLocation', coordinates);
+      } else if (type == 'ceremonia') {
+        commit('setLocationCeremony', coordinates);
+      } else {
+        commit('setLocationCeremonyAdd', coordinates);
+      }
+      
     },
 
     async updateEvento({commit}, data) {
