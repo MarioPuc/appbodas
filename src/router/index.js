@@ -11,6 +11,11 @@ const routes = [
     component: InvitadosView
   },
   {
+    path: '/invitado/:idInvitado?',
+    name: 'home1',
+    component: InvitadosView
+  },
+  {
     path: '/login',
     name: 'login',
     // route level code-splitting

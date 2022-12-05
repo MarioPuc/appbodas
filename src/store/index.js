@@ -206,8 +206,6 @@ export default new Vuex.Store({
       let empresa = {};
       const idRuta = data;
 
-      console.log("desde get empresa", idRuta);
-
         await db
           .collection("empresas")
           .where("id", "==", idRuta)

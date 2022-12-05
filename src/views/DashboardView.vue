@@ -56,15 +56,20 @@
                       <v-col cols="6">
                         <v-select
                           v-model="evento.banquetera"
-                          :items="banqueteras"
+                          :items="empresas[0]"
+                          item-text="nombre"
+                          item-value="id"
                           label="Banquetera"
+                          @change="actualizarEmpleados(evento.banquetera)"
                         ></v-select>
                       </v-col>
 
                       <v-col cols="6">
                         <v-select
                           v-model="evento.planner"
-                          :items="planners"
+                          :items="empleados"
+                          item-text="nombreEmpleado"
+                          item-value="idEmpleado"
                           label="Wedding / Event Planner"
                         ></v-select>
                       </v-col>
@@ -433,7 +438,6 @@ export default {
       'Cóctel',
       'Informal'
     ],
-    planners: ['Marta Sosa', 'Otra'],
     textDocsError: '',
     tiposEventos: [
       'Boda Religiosa',
@@ -483,7 +487,7 @@ export default {
   }),
 
   computed: {
-    ... mapState(['eventos', 'evento', 'opciones', 'respuestaAnadirEvento']),
+    ... mapState(['empleados', 'empresas', 'eventos', 'evento', 'opciones', 'respuestaAnadirEvento']),
 
     logged() {
       return localStorage.getItem("isLogged");
@@ -505,7 +509,7 @@ export default {
 
     methods: {
 
-      ... mapActions(['addEvento', 'getEventos', 'getOpciones']),
+      ... mapActions(['addEvento', 'getEmpleados', 'getEmpresas', 'getEventos', 'getOpciones']),
       
       agregarEvento() {
         this.addEvento(this.evento);
@@ -514,6 +518,7 @@ export default {
       initialize(){
         this.getEventos();
         this.getOpciones();
+        this.getEmpresas();
       },
 
       async subirImagenes(){
@@ -550,6 +555,10 @@ export default {
           this.evento.docs = this.list;
           this.arrayPDF = [];
         }
+    },
+    actualizarEmpleados(id) {
+        console.log(id);
+        this.getEmpleados(id);
     },
     validacion() {
       this.$refs.form.validate() ? this.agregarEvento() : null ;

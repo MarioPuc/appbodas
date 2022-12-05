@@ -50,15 +50,20 @@
                       <v-col cols="6">
                         <v-select
                           v-model="evento.banquetera"
-                          :items="banqueteras"
+                          :items="empresas[0]"
+                          item-text="nombre"
+                          item-value="id"
                           label="Banquetera"
+                          @change="actualizarEmpleados(evento.banquetera)"
                         ></v-select>
                       </v-col>
 
                       <v-col cols="6">
                         <v-select
                           v-model="evento.planner"
-                          :items="planners"
+                          :items="empleados"
+                          item-text="nombreEmpleado"
+                          item-value="idEmpleado"
                           label="Wedding / Event Planner"
                         ></v-select>
                       </v-col>
@@ -391,6 +396,22 @@
                                 :items-per-page="5"
                                 class="elevation-1"
                             >
+                            <template v-slot:item.code="{ item }">
+                              <input 
+                                v-on:focus="$event.target.select()" 
+                                ref="clone"
+                                class="input-clone" 
+                                readonly
+                                :value="'https://workspacedigiart.com/invitado/' + item.idInvitado"/>
+                                <v-icon
+                                    medium
+                                    color="info"
+                                    class="mr-2"
+                                    @click="clipboard"
+                                >
+                                    mdi-content-copy
+                                </v-icon>
+                            </template>
                             <template v-slot:item.actions="{ item }">
                                 <v-icon
                                     medium
@@ -468,6 +489,7 @@
           { text: 'Telefono del invitado', value: 'telefonoInvitado' },
           { text: 'Numero total de asistentes', value: 'totalAsistentes' },
           { text: 'Número de mesa', value: 'numeroMesa' },
+          { text: "Código de invitado", value: "code", sortable: false },
           { text: "Acciones", value: "actions", sortable: false },
         ],
         invitado: {
@@ -491,7 +513,6 @@
           'Cóctel',
           'Informal'
         ],
-        planners: ['Marta Sosa', 'Otra'],
         textDocsError: '',
         tiposEventos: [
           'Boda Religiosa',
@@ -551,7 +572,7 @@
     }),
 
     computed: {
-        ... mapState([ 'evento', 'eventos', 'invitados', 'opciones', 'respuestaEditarEvento']),
+        ... mapState(['empleados', 'empresas', 'evento', 'eventos', 'invitados', 'opciones', 'respuestaEditarEvento']),
 
         logged() {
             return localStorage.getItem("isLogged");
@@ -561,7 +582,6 @@
     watch: {
       respuestaEditarEvento(nuevaRespuesta, respuestaAnterior) {
         if (nuevaRespuesta != respuestaAnterior && nuevaRespuesta == 'exito') {
-          console.log("desde el watch de respuesta");
           this.snackbar.text = "El evento se ha modificado con exito";
           this.snackbar.open =  true;
           setTimeout(() => {
@@ -573,8 +593,11 @@
     },
 
     methods: {
+      ... mapActions(['addEvento', 'getEmpleados', 'getEmpresas', 'getEvento', 'getOpciones', 'updateEvento', 'addInvitado', 'getInvitados', 'updateInvitado']),
 
-      ... mapActions(['addEvento', 'getEvento', 'getOpciones', 'updateEvento', 'addInvitado', 'getInvitados', 'updateInvitado']),
+      actualizarEmpleados(id) {
+        this.getEmpleados(id);
+      },
 
       actualizarEvento(evento) {
         this.updateEvento(evento);
@@ -589,13 +612,10 @@
       },
 
       async actualizarInvitado() {
-        console.log(this.invitado);
 
         response = await this.updateInvitado(this.invitado).then(
           this.invitado = {}
         );
-
-
       },
 
       editandoInvitado(invitado) {
@@ -603,15 +623,16 @@
         let invitadoBreak = {};
         invitadoBreak = invitado;
         this.invitado = invitadoBreak;
-
-        console.log(invitado);
-
       },
 
       initialize(){
         this.getEvento(this.$route.params.id);
         this.getInvitados(this.$route.params.id);
         this.getOpciones();
+        setTimeout( () => {
+          this.getEmpresas(this.evento.banquetera);
+          this.getEmpleados(this.evento.banquetera);
+        }, 2000 );
       },
 
       async subirImagenes(){
@@ -660,7 +681,18 @@
       },
       validacionArrayPDF() {
         return this.evento.docs.length != 0 ? true : 'Agregue un invitación para su evento'
+      },
+      clipboard() {
+        this.$refs.clone.focus();
+        document.execCommand('copy');
+        this.snackbar.text = "Link de invitado agregado al portapapeles";
+        this.snackbar.open =  true;
       }
     }
   }
   </script>
+  <style scoped>
+  .input-clone {
+      max-width: 70px !important;
+    }
+  </style>

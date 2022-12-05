@@ -13,14 +13,15 @@
         <p>¡Bienvenido!</p>
         
         <div v-if="!isScanning">
-          <p>Por favor, digite su código de invitado: </p>
+          <!--<p class="hidden" >Por favor, digite su código de invitado: </p>-->
 
           <v-form>
-              <v-text-field
+              <!--<v-text-field
                   v-model="codigoInvitado"
                   label="Código de invitado"
                   color="#000"
-              ></v-text-field>
+                  class="hidden"
+              ></v-text-field>-->
 
               <p v-if="datosApp.respuesta.codigoInvitado == 'exito'"> 
                 Código enviado con éxito 
@@ -33,10 +34,10 @@
                 El código no es válido, revise su digitación 
               </p>
 
-              <v-btn color="#E6C98A" class="white--text" tile elevation="0" v-on:click="setInvitado()">Buscar invitado</v-btn>
+              <!--<v-btn color="#E6C98A" class="white--text hidden" tile elevation="0" v-on:click="setInvitado()">Buscar invitado</v-btn>-->
           </v-form>
 
-          <p class="py-3">o escanée el código QR de su invitación</p>
+          <p class="py-3">Escanée el código QR de su invitación</p>
           <v-btn color="#E6C98A" class="white--text" tile elevation="0" v-on:click="isScanning = !isScanning">Escanear código</v-btn>
         </div>
         <div v-else>
@@ -44,9 +45,6 @@
 
           <LectorQR />
 
-          <p>o digite su código de invitado</p>
-          
-          <v-btn class="wedding-button" v-on:click="isScanning = !isScanning">Digitar código de invitado</v-btn>
         </div>
     </div>
 
@@ -74,6 +72,10 @@ import LectorQR from '../pages/LectorQR'
         msjRespuesta  : ''
       }),
 
+      created() {
+        this.initialize();
+      },
+
       computed: {
         ... mapState(['visibles', 'datosApp'])
       },
@@ -85,6 +87,10 @@ import LectorQR from '../pages/LectorQR'
           this.msjRespuesta = await this.getInvitadoById(this.codigoInvitado);
           console.log(this.msjRespuesta);
         },
+
+        async initialize() {
+          this.$route.params.idInvitado ? await this.getInvitadoById(this.$route.params.idInvitado) : null
+        }
       }
     }
   </script>
