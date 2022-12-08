@@ -412,7 +412,7 @@ export default {
         text: 'Evento',
         align: 'start',
         sortable: false,
-        value: 'nombreEvento',
+        value: 'tipoEvento',
       },
       { text: 'Cliente', value: 'nombreCliente' },
       { text: 'Telefono del cliente', value: 'telefonoCliente' },

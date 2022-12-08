@@ -133,11 +133,17 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async getEventos({commit}) {
+    async getEventos({commit, state}) {
       let list = [];
       let sessionEventos = localStorage.getItem('eventos');
+      const lastGetEventos =  localStorage.getItem('lastGetEventos');
 
-      if(sessionEventos == null || sessionEventos == undefined){
+      if( (sessionEventos !== null && sessionEventos !== undefined) && moment().diff(lastGetEventos, "minutes") < 5){
+        console.log("desde el store");
+        list = JSON.parse(sessionEventos);
+        commit('setEventos', list);
+      } else {
+        console.log("nuevo call");
         await db
           .collection("eventos")
           .get()
@@ -145,19 +151,21 @@ export default new Vuex.Store({
             snapshot.docs.forEach((doc) => list.push(doc.data())); 
             commit('setEventos', list);
             localStorage.setItem('eventos', JSON.stringify(list));
+            const getTimeStamp = moment();
+            localStorage.setItem('lastGetEventos', getTimeStamp);
         });
-
-      } else {
-        list = JSON.parse(sessionEventos);
-        commit('setEventos', list);
       }
     },
 
     async getEmpresas({commit}) {
       let list = [];
       let sessionEmpresas = localStorage.getItem('empresas');
+      const lastGetEmpresas =  localStorage.getItem('lastGetEmpresas');
 
-      if(sessionEmpresas == null || sessionEmpresas == undefined){
+      if((sessionEmpresas !== null && sessionEmpresas !== undefined) && moment().diff(lastGetEmpresas, "minutes") < 5){
+        list = JSON.parse(sessionEmpresas);
+        commit('setEmpresas', list);
+      } else {
         await db
           .collection("empresas")
           .get()
@@ -165,11 +173,9 @@ export default new Vuex.Store({
             snapshot.docs.forEach((doc) => list.push(doc.data())); 
             commit('setEmpresas', list);
             localStorage.setItem('empresas', JSON.stringify(list));
+            const getTimeStamp = moment();
+            localStorage.setItem('lastGetEmpresas', getTimeStamp);
         });
-
-      } else {
-        list = JSON.parse(sessionEmpresas);
-        commit('setEmpresas', list);
       }
     },
 
@@ -433,7 +439,7 @@ export default new Vuex.Store({
           .where("idInvitado", "==", data)
           .get()
           .then( async (snapshot) => {
-            snapshot.docs.forEach((doc) => invitado.push(doc.data())); 
+            snapshot.docs.forEach((doc) => invitado.push(doc.data()));
             
             if(invitado.length > 0) {
 
@@ -444,13 +450,16 @@ export default new Vuex.Store({
               .then((snapshot) => {
                 snapshot.docs.forEach((doc) => evento.push(doc.data())); 
                 if(evento.length > 0 ) {
+                  console.log(evento[0]);
                   commit('setInvitadoApp', invitado[0]);
                   commit('setEventoApp', evento[0]);
                   commit('setBienvenida', false);
                   commit('setRespuestaCodigoInvitado', "exito");
+                } else {
+                  console.log("No se encontró el evento");
+                  commit('setRespuestaCodigoInvitado', "fallo");
                 }
               });
-
             } else {
               console.log('no hay invitado');
               commit('setRespuestaCodigoInvitado', "fallo");

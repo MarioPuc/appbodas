@@ -1,23 +1,23 @@
 <template>
   <div>
-    <Bienvenida />
-    <ConfirmacionAsistencia />
-    <Asistencia />
+    <Seccion1 />
+    <Seccion2 />
+    <Seccion3 />
   </div>
 </template>
 
 <script>
-  import Bienvenida from '../components/pages/Bienvenida.vue';
-  import ConfirmacionAsistencia from '../components/pages/ConfirmacionAsistencia.vue';
-  import Asistencia from '../components/pages/Asistencia.vue'
+  import Seccion1 from '../components/pages/Seccion1.vue';
+  import Seccion2 from '../components/pages/Seccion2.vue';
+  import Seccion3 from '../components/pages/Seccion3.vue'
 
   export default {
     name: 'Home',
 
     components: {
-    Bienvenida,
-    ConfirmacionAsistencia,
-    Asistencia
+      Seccion1,
+      Seccion2,
+      Seccion3
 },
 
     data: () => ({

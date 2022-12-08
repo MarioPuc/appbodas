@@ -31,7 +31,7 @@
                 v-else-if="datosApp.respuesta.codigoInvitado == 'fallo'"
                 class="response-message"
               > 
-                El código no es válido, revise su digitación 
+                El código no es válido, intente de nuevo
               </p>
 
               <!--<v-btn color="#E6C98A" class="white--text hidden" tile elevation="0" v-on:click="setInvitado()">Buscar invitado</v-btn>-->
@@ -60,7 +60,7 @@ import { mapActions, mapState } from 'vuex'
 import LectorQR from '../pages/LectorQR'
   
     export default {
-      name: 'Home',
+      name: 'Seccion1',
 
       components: {
         LectorQR
