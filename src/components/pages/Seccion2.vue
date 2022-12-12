@@ -8,12 +8,48 @@
         <v-container fill-height fluid>
           <v-row align="center"
               justify="center">
-          <div class="app-container">
+          <div v-if="datosPrincipales">
+            <p
+              class="pb-2y" 
+              :style="`font-size:${this.datosApp.evento.tamanoFuenteTitulo}px; font-family:${this.datosApp.evento.fuenteTitulo}; color:${this.datosApp.evento.colorFuenteTitulo};`"> 
+                {{ this.datosApp.evento.nombreOwner }}
+            </p>
+
+            <p>Te invitamos a celebrar con nosotros</p>
+
+            <p :style="`font-size: 35px; font-family:${this.datosApp.evento.fuenteTitulo}; `" >Nuestra Boda</p>
+
+            <p>{{ this.datosApp.evento.fechaEvento }}</p>
+
+            <p>RECEPCIÓN</p>
+
+            <a :href="coordinatesGrades" target="_blank">
+              <v-btn color="#E6C98A" class="white--text my-2" tile elevation="0">Ver evento en google maps</v-btn>
+            </a>
+
+            <p>{{ this.datosApp.evento.horaEvento }} hrs</p>
+
+            <p>Código de vestimenta: </p>
+
+            <p>{{ this.datosApp.evento.codigoVestimenta }}</p>
+
+            <a :href="this.datosApp.evento.linkMesas" target="_blank">
+              <v-btn color="#E6C98A" class="white--text" tile elevation="0">Ver mesa de regalos</v-btn>
+            </a>
+            <div>
+              <v-btn color="#E6C98A" class="white--text my-5" tile elevation="0" v-on:click="() => { this.datosPrincipales = !this.datosPrincipales }">
+                <v-icon>mdi-arrow-right-bold</v-icon>
+            </v-btn>
+            </div>
+            
+
+          </div>
+          <div class="app-container" v-if="!datosPrincipales">
             <p
               class="pb-4" 
               :style="`font-size:${this.datosApp.evento.tamanoFuenteTitulo}px; font-family:${this.datosApp.evento.fuenteTitulo}; color:${this.datosApp.evento.colorFuenteTitulo}`"> 
                 {{ this.datosApp.evento.nombreOwner }}
-          </p>
+            </p>
 
             <p
             :style="`font-size:${this.datosApp.evento.tamanoFuenteCuerpo}px; font-family:${this.datosApp.evento.fuenteCuerpo}; color:${this.datosApp.evento.colorFuenteCuerpo}`"
@@ -44,7 +80,8 @@ import * as moment from 'moment';
   
       data: () => ({
         codigoEvento : "",
-        nombreUsuario: "Mario Puc1"  
+        coordenadasGrados: "",
+        datosPrincipales: true
       }),
 
       computed: {
@@ -52,11 +89,14 @@ import * as moment from 'moment';
         deadline() {
           moment.locale('es-mx');
           return moment(this.datosApp.evento.fechaEvento).subtract(2, 'months').format('LL');
+        },
+        coordinatesGrades() {
+          const objCoordenadas = this.datosApp.evento.locacionEvento;
+          return `https://www.google.com.mx/maps/search/${objCoordenadas.lat}, ${objCoordenadas.lng}`;
         }
       },
   
       methods: {
-
         ... mapActions(['confirmacionAsistencia']),
 
         confirmarAsistencia(status){
