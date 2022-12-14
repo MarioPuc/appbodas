@@ -490,6 +490,7 @@
           { text: 'Numero total de asistentes', value: 'totalAsistentes' },
           { text: 'Número de mesa', value: 'numeroMesa' },
           { text: "Código de invitado", value: "code", sortable: false },
+          { text: "Asistirá", value: "statusConfirmacion", sortable: false },
           { text: "Acciones", value: "actions", sortable: false },
         ],
         invitado: {

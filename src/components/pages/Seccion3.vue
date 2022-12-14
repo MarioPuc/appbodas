@@ -48,12 +48,48 @@
           </p>
 
           <p class="pt-4 subtext"> {{ deadline }} a las 23:00 hrs</p>
+
+          <span>Regresar a la página principal</span><br>
+
+          <a href="/">
+          <v-btn color="#E6C98A" class="white--text my-5" tile elevation="0" >
+            <v-icon>mdi-arrow-u-left-bottom</v-icon>
+          </v-btn>
+        </a>
         </div>
       </div>
       <div v-else>
-        <h1>Te esperamos</h1>
 
-        <p></p>
+        <h3>Nombre: </h3>
+
+        <p>{{ this.datosApp.invitado.nombreInvitado }}</p>
+
+        <h3>Número de acompañantes: </h3>
+
+        <p>{{ this.datosApp.invitado.totalAsistentes }}</p>
+
+        <h3>Preferencias alimenticias: </h3>
+
+        <p>N/A</p>
+
+        <h3>Alergias alimenticias: </h3>
+
+        <p>N/A</p>
+
+        <p>
+            Puedes cambiar tu selección antes del:
+        </p>
+
+        <p class="pt-4 subtext"> {{ deadline }} a las 23:00 hrs</p>
+
+        <span>Regresar a la página principal</span><br>
+
+        <a href="/">
+          <v-btn color="#E6C98A" class="white--text my-5" tile elevation="0" >
+            <v-icon>mdi-arrow-u-left-bottom</v-icon>
+          </v-btn>
+        </a>
+
             </div>
           </div>
         </v-row>

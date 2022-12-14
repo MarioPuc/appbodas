@@ -58,7 +58,7 @@ li {
     background-color: #E6C98A;
 }
 
-p {
+p, span {
     font-family: 'Work Sans', sans-serif;
     font-weight: 300;
 }
