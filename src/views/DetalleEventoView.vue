@@ -364,6 +364,15 @@
 
                       <v-col cols="4">
                         <v-text-field
+                        label="Correo electrónico"
+                        hide-details="auto"
+                        v-model="invitado.email"
+                        :rules="reglas.email"
+                        ></v-text-field>
+                      </v-col>
+
+                      <v-col cols="4">
+                        <v-text-field
                         label="Total asistentes"
                         type="number"
                         min="1"
@@ -420,6 +429,14 @@
                                     v-on:click="editandoInvitado(item)"
                                 >
                                     mdi-pencil
+                                </v-icon>
+                                <v-icon
+                                    medium
+                                    color="info"
+                                    class="mr-2"
+                                    v-on:click="enviarCorreoInvitado(item)"
+                                >
+                                    mdi-email
                                 </v-icon>
                               <v-icon
                                   medium
@@ -529,6 +546,10 @@
         ],
         reglas: {
           especifico: [
+            v => !!v || 'El email no es válido',
+            v => /.+@.+\..+/.test(v) || 'El email debe ser válido',
+          ],
+          especifico: [
             v => !!v || 'Especifique el tipo de evento'
           ],
           fechaCeremonia: [
@@ -624,6 +645,19 @@
         let invitadoBreak = {};
         invitadoBreak = invitado;
         this.invitado = invitadoBreak;
+      },
+
+      async enviarCorreoInvitado(invitado) {
+        const sendUrl = "http://activatmkt.com/send.php";
+        let respuesta = await axios.post(
+          sendUrl,
+          invitado
+        ).then((response) => {
+          if(response.status == 200) {
+            this.snackbar.text = "¡Email de invitación enviado!";
+            this.snackbar.open =  true;
+          }      
+        });
       },
 
       initialize(){
