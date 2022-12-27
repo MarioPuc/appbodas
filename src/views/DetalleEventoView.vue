@@ -413,7 +413,7 @@
                                 readonly
                                 :value="'https://workspacedigiart.com/invitado/' + item.idInvitado"/>
                                 <v-icon
-                                    medium
+                                    small
                                     color="info"
                                     class="mr-2"
                                     @click="clipboard"
@@ -421,9 +421,27 @@
                                     mdi-content-copy
                                 </v-icon>
                             </template>
+                            <template v-slot:item.statusCorreo="{ item }">
+                              <div>
+                                <div v-if="item.statusEnvioCorreo == 'Correo enviado'">
+                                  <v-icon
+                                    color="success"
+                                  >
+                                    mdi-check
+                                  </v-icon>
+                                </div>
+                                <div v-else>
+                                  <v-icon
+                                    color="error"
+                                  >
+                                    mdi-exclamation-thick
+                                  </v-icon>
+                                </div>
+                              </div>    
+                            </template>   
                             <template v-slot:item.actions="{ item }">
                                 <v-icon
-                                    medium
+                                    small
                                     color="info"
                                     class="mr-2"
                                     v-on:click="editandoInvitado(item)"
@@ -431,7 +449,7 @@
                                     mdi-pencil
                                 </v-icon>
                                 <v-icon
-                                    medium
+                                    small
                                     color="info"
                                     class="mr-2"
                                     v-on:click="enviarCorreoInvitado(item)"
@@ -439,7 +457,7 @@
                                     mdi-email
                                 </v-icon>
                               <v-icon
-                                  medium
+                                  small
                                   color="error"
                                   class="d-none"
                               >
@@ -507,7 +525,8 @@
           { text: 'Numero total de asistentes', value: 'totalAsistentes' },
           { text: 'Número de mesa', value: 'numeroMesa' },
           { text: "Código de invitado", value: "code", sortable: false },
-          { text: "Asistirá", value: "statusConfirmacion", sortable: false },
+          { text: "Asistira", value: "statusConfirmacion", sortable: false },
+          { text: "Correo enviado", value: "statusCorreo", sortable: false },
           { text: "Acciones", value: "actions", sortable: false },
         ],
         invitado: {
@@ -652,10 +671,12 @@
         let respuesta = await axios.post(
           sendUrl,
           invitado
-        ).then((response) => {
+        ).then( async (response) => {
           if(response.status == 200) {
             this.snackbar.text = "¡Email de invitación enviado!";
             this.snackbar.open =  true;
+            invitado.statusEnvioCorreo = "Correo enviado";
+            response = await this.updateInvitado(invitado).then();
           }      
         });
       },
