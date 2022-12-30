@@ -625,10 +625,10 @@
         if (nuevaRespuesta != respuestaAnterior && nuevaRespuesta == 'exito') {
           this.snackbar.text = "El evento se ha modificado con exito";
           this.snackbar.open =  true;
-          setTimeout(() => {
-            //this.snackbar.text = "";
-            window.location.reload(true);
-          }, 4000);
+          // setTimeout(() => {
+          //   this.snackbar.text = "";
+          //   window.location.reload(true);
+          // }, 4000);
         }
       }
     },
@@ -676,7 +676,9 @@
             this.snackbar.text = "¡Email de invitación enviado!";
             this.snackbar.open =  true;
             invitado.statusEnvioCorreo = "Correo enviado";
-            response = await this.updateInvitado(invitado).then();
+            response = await this.updateInvitado(invitado).then(
+              this.getInvitados(this.$route.params.id)
+            );
           }      
         });
       },
@@ -693,7 +695,6 @@
 
       async subirImagenes(){
       if(this.arrayPDF.length == 0){
-          //document.getElementById("zonaImagenes").innerHTML = "";
         } else {
           let formData = new FormData();
           for (let doc of this.arrayPDF) {
@@ -711,7 +712,6 @@
               } else {
                 sessionStorage.setItem('oldNombreDoc', response.data.oldDoc);
                 sessionStorage.setItem('nombreDoc', response.data.doc);
-                //document.getElementById("imagenCargada").innerHTML = `<img src='https://www.agenciaweb.mx/agronome/${nombreImagen}' style="width: 70px;">`;
               }
             });
             this.objectDoc = {

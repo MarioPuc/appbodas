@@ -139,11 +139,9 @@ export default new Vuex.Store({
       const lastGetEventos =  localStorage.getItem('lastGetEventos');
 
       if( (sessionEventos !== null && sessionEventos !== undefined) && moment().diff(lastGetEventos, "minutes") < 5){
-        console.log("desde el store");
         list = JSON.parse(sessionEventos);
         commit('setEventos', list);
       } else {
-        console.log("nuevo call");
         await db
           .collection("eventos")
           .get()
@@ -194,8 +192,6 @@ export default new Vuex.Store({
     async getEvento({commit}, data) {
       let evento = {};
       const idRuta = data;
-
-      console.log("desde get evento", idRuta);
 
         await db
           .collection("eventos")
@@ -266,7 +262,6 @@ export default new Vuex.Store({
           .collection("eventos")
           .add(data)
           .then( async (snapshot) => {
-            console.log("Evento agregado");
             data.idFirebase = snapshot.id;
 
             let stringEvento = localStorage.getItem('eventos');
@@ -280,7 +275,6 @@ export default new Vuex.Store({
             .doc(data.idFirebase)
             .update(data)
             .then((snapshot) => {
-              console.log("Evento actualizado");
               commit('setRespuestaAnadirEvento', 'exito');
             });
           });
@@ -299,7 +293,6 @@ export default new Vuex.Store({
           .collection("empresas")
           .add(data)
           .then( async (snapshot) => {
-            console.log("Empresa agregada");
             data.idFirebase = snapshot.id;
 
             let stringEmpresa = localStorage.getItem('empresas');
@@ -313,7 +306,6 @@ export default new Vuex.Store({
             .doc(data.idFirebase)
             .update(data)
             .then((snapshot) => {
-              console.log("Empresa actualizada");
               commit('setRespuestaAnadirEmpresa', 'exito');
             });
           });
@@ -345,7 +337,6 @@ export default new Vuex.Store({
           .doc(data.idFirebase)
           .update(data)
           .then((snapshot) => {
-            console.log("Evento actualizado");
             commit('setRespuestaEditarEvento', 'exito');
           });
     },
@@ -363,7 +354,6 @@ export default new Vuex.Store({
           .doc(data.idFirebase)
           .update(data)
           .then((snapshot) => {
-            console.log("Empresa actualizada");
           });
     },
 
@@ -373,7 +363,6 @@ export default new Vuex.Store({
           .doc(data.idFirebase)
           .update(data)
           .then((snapshot) => {
-            console.log("Invitado actualizado");
             return "success";
           });
     },
@@ -384,7 +373,6 @@ export default new Vuex.Store({
           .doc(data.idFirebase)
           .update(data)
           .then((snapshot) => {
-            console.log("Empleado actualizado");
             return "success";
           });
     },
@@ -394,7 +382,6 @@ export default new Vuex.Store({
           .collection("invitados")
           .add(data)
           .then( async (snapshot) => {
-            console.log("Invitado agregado");
             data.idFirebase = snapshot.id;
             data.idInvitado = generateRandomId();
             
@@ -403,7 +390,6 @@ export default new Vuex.Store({
             .doc(data.idFirebase)
             .update(data)
             .then((snapshot) => {
-              console.log("Invitados actualizado");
               window.location.reload(true);
             });
           });
@@ -414,7 +400,6 @@ export default new Vuex.Store({
           .collection("empleados")
           .add(data)
           .then( async (snapshot) => {
-            console.log("Empleado agregado");
             data.idFirebase = snapshot.id;
             data.idEmpleado = generateRandomId();
             
@@ -423,7 +408,6 @@ export default new Vuex.Store({
             .doc(data.idFirebase)
             .update(data)
             .then((snapshot) => {
-              console.log("Empleados actualizado");
               window.location.reload(true);
             });
           });
@@ -450,18 +434,15 @@ export default new Vuex.Store({
               .then((snapshot) => {
                 snapshot.docs.forEach((doc) => evento.push(doc.data())); 
                 if(evento.length > 0 ) {
-                  console.log(evento[0]);
                   commit('setInvitadoApp', invitado[0]);
                   commit('setEventoApp', evento[0]);
                   commit('setBienvenida', false);
                   commit('setRespuestaCodigoInvitado', "exito");
                 } else {
-                  console.log("No se encontró el evento");
                   commit('setRespuestaCodigoInvitado', "fallo");
                 }
               });
             } else {
-              console.log('no hay invitado');
               commit('setRespuestaCodigoInvitado', "fallo");
             }
         }); 
@@ -477,8 +458,6 @@ export default new Vuex.Store({
       commit('setConfirmacionAsistencia', payload)
 
       let invitado = state.datosApp.invitado
-
-      console.log(invitado)
 
       invitado.statusConfirmacion = data
 
@@ -501,7 +480,6 @@ export default new Vuex.Store({
           .doc(invitado.idFirebase)
           .update(invitado)
           .then((snapshot) => {
-            console.log("Invitado actualizado");
             return "success";
       });
     }

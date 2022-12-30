@@ -60,6 +60,7 @@
   <script>
     import Navbar from '@/components/Navbar.vue';
     import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+    import { mapActions, mapState } from 'vuex';
 
     export default {
     name: 'Home',
@@ -83,21 +84,25 @@
     }),
 
     computed: {
+        ... mapState(['accountName']),
         logged() {
             return localStorage.getItem("isLogged");
         },
     },
 
     methods: {
+        ... mapActions(['accountDetailsUpdate']),
         async logIn() {
             try {
                 const auth = getAuth();
                 const val = await signInWithEmailAndPassword(auth, this.user.name, this.user.password);
                 console.log(val);
                 localStorage.setItem("isLogged", "Logged");
+                localStorage.setItem("accountName", this.user.name );
+                this.accountDetailsUpdate();
+
                 this.$router.replace({ name: "dashboard" });
             } catch (err) {
-                console.log(err);
                 this.snackbar.color = "red darken-1 white--text";
                 if(err.code == "auth/user-not-found") {
                 this.snackbar.text = "El usuario no existe o ha sido eliminado";
@@ -105,13 +110,12 @@
                 this.snackbar.text = "La contraseña de este usuario es incorrecta";
                 } else if(err.code == "auth/network-request-failed") {
                 this.snackbar.text = "Error de conexión, es posible que su conexión sea baja o haya exedido el tiempo limite de espera";
+                } else if (err.code == "auth/invalid-email") {
+                    this.snackbar.text = "El correo electronico no es válido";
                 }
                 this.snackbar.open = true;
             }
-            },
+        }
     }
-
     }
-
-    
   </script>
