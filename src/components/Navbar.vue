@@ -5,7 +5,7 @@
 
             <v-row justify="space-between" align="center">
         <v-col cols="4">
-          <router-link to="/">
+          <router-link to="/dashboard">
           <v-img
             :src="require('../assets/logo.png')"
             class="ma-3"

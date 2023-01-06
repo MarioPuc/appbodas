@@ -335,14 +335,34 @@
                     <v-card class="px-8 py-6">
                         <h1>Invitados</h1>
 
+                      <h2 class="text-left" v-if="!isEditing">Agregar invitado</h2>
+                      <h2 class="text-left" v-else>Editar invitado</h2>
+
+                      <div class="grid grd-cols-2 text-right">
+                        <div></div>
+                        <div>
+                          <v-btn 
+                            class="red white--text mx-3"
+                            v-on:click="() => {
+                              isSetAgregarInvitados = true;
+                              isSetImportarInvitados = false;
+                          }">Agregar Invitado</v-btn>
+
+                          <v-btn 
+                            class="success mx-3"
+                            v-on:click="() => {
+                              isSetImportarInvitados = true;
+                              isSetAgregarInvitados = false;
+                          }">Importar Invitados</v-btn>
+                        </div>
+                      </div>
+
+                      <div v-if="isSetAgregarInvitados">
                         <v-form 
                           ref="form"
                           v-model="statusValidoInvitado"
                           lazy-validation class="py-10 text-right"
                         >
-                      <h2 class="text-left" v-if="!isEditing">Agregar invitado</h2>
-                      <h2 class="text-left" v-else>Editar invitado</h2>
-
                       <v-row class="py-4">
                       <v-col cols="4">
                         <v-text-field
@@ -393,10 +413,20 @@
                       </v-col>
                     </v-row>
 
-                    <v-btn color="red white--text" v-on:click="validacionInvitadoAdd()" v-if="!isEditing">Agregar Invitado</v-btn>
-                    <v-btn color="red white--text" v-on:click="validacionInvitadoUpdate()" v-else>Actualizar Invitado</v-btn>
-
+                    <v-btn color="red white--text" v-on:click="validacionInvitadoAdd()" v-if="!isEditing">Agregar</v-btn>
+                    <v-btn color="red white--text" v-on:click="validacionInvitadoUpdate()" v-else>Actualizar</v-btn>
                     </v-form>
+                    </div>
+                    <div v-if="isSetImportarInvitados">
+                      <v-form>
+                        <v-file-input 
+                          label="Subir archivo xlsx"
+                          v-model="archivoXLSX"
+                          @change="processFile()"
+                        >
+                        </v-file-input>
+                      </v-form>
+                    </div>
 
                         <template>
                             <v-data-table
@@ -408,7 +438,7 @@
                             <template v-slot:item.code="{ item }">
                               <input 
                                 v-on:focus="$event.target.select()" 
-                                ref="clone"
+                                :ref="'code'+ item.idInvitado"
                                 class="input-clone" 
                                 readonly
                                 :value="'https://workspacedigiart.com/invitado/' + item.idInvitado"/>
@@ -416,7 +446,23 @@
                                     small
                                     color="info"
                                     class="mr-2"
-                                    @click="clipboard"
+                                    @click="clipboard('code' + item.idInvitado )"
+                                >
+                                    mdi-content-copy
+                                </v-icon>
+                            </template>
+                            <template v-slot:item.whatsCode="{ item }">
+                              <input 
+                                v-on:focus="$event.target.select()" 
+                                :ref="'whatsCode' + item.idInvitado"
+                                class="input-clone" 
+                                readonly
+                                :value="'https://wa.me/+52' + item.telefonoInvitado + '?text=Te+han+ivitado+al++%2C+para+más+detalles+visita+el+siguiente+link+https%3A%2F%2Fworkspacedigiart.com%2Finvitado%2F' + item.idInvitado"/>
+                                <v-icon
+                                    small
+                                    color="info"
+                                    class="mr-2"
+                                    @click="clipboard('whatsCode' + item.idInvitado)"
                                 >
                                     mdi-content-copy
                                 </v-icon>
@@ -498,6 +544,7 @@
     import Navbar from '@/components/Navbar.vue';
     import Map from '@/components/widgets/Map.vue'
     import MensajeBloqueo from '@/components/MensajeBloqueo.vue';
+    import xlsxFileToJson from '@/tools/xlsx';
 
     export default {
     name: 'Home',
@@ -518,6 +565,9 @@
         docsError: false,
         isCreating: false,
         isEditing: false,
+        isSetAgregarInvitados: true,
+        isSetImportarInvitados: false,
+        archivoXLSX: null,
 
         headers: [
           { text: 'Nombre del invitado', value: 'nombreInvitado' },
@@ -525,6 +575,7 @@
           { text: 'Numero total de asistentes', value: 'totalAsistentes' },
           { text: 'Número de mesa', value: 'numeroMesa' },
           { text: "Código de invitado", value: "code", sortable: false },
+          { text: "Enlace de invitado WhatsApp", value: "whatsCode", sortable: false },
           { text: "Asistira", value: "statusConfirmacion", sortable: false },
           { text: "Correo enviado", value: "statusCorreo", sortable: false },
           { text: "Acciones", value: "actions", sortable: false },
@@ -738,11 +789,20 @@
       validacionArrayPDF() {
         return this.evento.docs.length != 0 ? true : 'Agregue un invitación para su evento'
       },
-      clipboard() {
-        this.$refs.clone.focus();
+      clipboard(ref) {
+        this.$refs[ref].focus();
         document.execCommand('copy');
         this.snackbar.text = "Link de invitado agregado al portapapeles";
         this.snackbar.open =  true;
+      },
+      async processFile() {
+        let response = xlsxFileToJson(this.archivoXLSX, this.evento.id);
+        // response.forEach( invitado => {
+        //   let paramsInvitado = invitado;
+        //   paramsInvitado.idEventoFirebase = this.evento.idFirebase;
+        //   paramsInvitado.idEvento = this.evento.id;
+        //   this.addInvitado(paramsInvitado);
+        // });
       }
     }
   }
