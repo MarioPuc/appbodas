@@ -8,16 +8,14 @@
         <v-container fill-height fluid>
           <v-row align="center"
               justify="center">
-    <div class="app-container" >
+    <div class="app-container white--text" >
       <div v-if="visibleAsistentes">
         <div v-if="visibles.asistencia == 'si'"> 
-            <h1>¡Excelente!</h1>
-            <h1>¡Gracias por su <br> confirmación!</h1>
+            <h1 :style="`font-size:${this.datosApp.evento.tamanoFuenteTitulo}px; font-family:${this.datosApp.evento.fuenteTitulo}; color:${this.datosApp.evento.colorFuenteTitulo}`">¡GRACIAS POR SU <br> CONFIRMACIÓN!</h1>
 
             <div>
-              <p class="pb-8">Aprovechando...</p>
 
-              <p>¿Podría decirnos cuantos <br /> asistentes serán?</p>
+              <p :style="`font-size:${this.datosApp.evento.tamanoFuenteCuerpo}px; font-family:${this.datosApp.evento.fuenteCuerpo}; color:${this.datosApp.evento.colorFuenteCuerpo}`">¿Podría decirnos cuantos <br /> asistentes serán?</p>
 
               <v-form>
                 <v-select
@@ -40,14 +38,13 @@
         </div>
 
         <div v-if="visibles.asistencia == 'no'">
-          <h1>Lamentamos que no puedas asistir</h1>
+          <h1 :style="`font-size:${this.datosApp.evento.tamanoFuenteTitulo}px; font-family:${this.datosApp.evento.fuenteTitulo}; color:${this.datosApp.evento.colorFuenteTitulo}`">LAMENTAMOS QUE NO PUEDAS ASISTIR</h1>
 
-          <p>
+          <p :style="`font-size:${this.datosApp.evento.tamanoFuenteCuerpo}px; font-family:${this.datosApp.evento.fuenteCuerpo}; color:${this.datosApp.evento.colorFuenteCuerpo}`">
             Si cambias de opinión puedes cambiar tu selección
-            antes del:
           </p>
 
-          <p class="pt-4 subtext"> {{ deadline }} a las 23:00 hrs</p>
+          <p class="pt-4 subtext d-none"> {{ deadline }} a las 23:00 hrs</p>
 
           <span>Regresar a la página principal</span><br>
 

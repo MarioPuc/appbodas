@@ -457,7 +457,7 @@
                                 :ref="'whatsCode' + item.idInvitado"
                                 class="input-clone" 
                                 readonly
-                                :value="'https://wa.me/+52' + item.telefonoInvitado + '?text=Te+han+ivitado+al++%2C+para+más+detalles+visita+el+siguiente+link+https%3A%2F%2Fworkspacedigiart.com%2Finvitado%2F' + item.idInvitado"/>
+                                :value="'https://wa.me/+52' + item.telefonoInvitado + '?text=¡Te+han+ivitado+al+Cumpleaños+de+Patty!+%2C+para+más+detalles+visita+el+siguiente+link+https%3A%2F%2Fworkspacedigiart.com%2Finvitado%2F' + item.idInvitado"/>
                                 <v-icon
                                     small
                                     color="info"

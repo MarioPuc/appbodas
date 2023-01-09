@@ -1,3 +1,20 @@
+/* fonts */
+
+@font-face {
+    font-family: 'GaramondMedIt';
+    src: url(../fonts/GaramondPremrPro-MedIt.ttf);
+}
+
+@font-face {
+    font-family: 'SofiaProRegular';
+    src: url(../fonts/SofiaProRegular.ttf);
+}
+
+@font-face {
+    font-family: 'Colatin';
+    src: url(../fonts/Colatin.ttf);
+}
+
 .theme-wedding{
     background-size: cover;
     background-repeat: no-repeat;
