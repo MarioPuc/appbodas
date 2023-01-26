@@ -74,13 +74,15 @@
 
               <p class="pt-4 subtext d-none"> {{ deadline }} a las 23:00 hrs</p>
 
-              <span>Gracias, te esperamos</span><br>
+              <span class="d-block">¡Los datos de tu confirmación se ha registrado exitosamente!</span>
+              <span class="d-none">¡Tu confirmación se ha actualizado!</span><br>
+              <span>¡Gracias, te esperamos!</span>
 
-              <a :href="urlActual">
+              <!--<a :href="urlActual">
                 <v-btn color="#E6C98A" class="white--text my-5" tile elevation="0">
                   Finalizar
                 </v-btn>
-              </a>
+              </a>-->
 
             </div>
           </div>

@@ -65,7 +65,9 @@ export default new Vuex.Store({
       asistencia: ""
     },
     datosApp: {
-      invitado: {},
+      invitado: {
+        isUpdated: false,
+      },
       evento: {},
       respuesta: {
         codigoInvitado: "",
@@ -426,7 +428,6 @@ export default new Vuex.Store({
             snapshot.docs.forEach((doc) => invitado.push(doc.data()));
             
             if(invitado.length > 0) {
-
               await db
               .collection("eventos")
               .where("id", "==", invitado[0].idEvento)
@@ -474,6 +475,7 @@ export default new Vuex.Store({
       let invitado = state.state.datosApp.invitado;
 
       invitado.totalAsistentes = data;
+      invitado.isUpdated = true;
 
       await db
           .collection("invitados")
@@ -483,10 +485,8 @@ export default new Vuex.Store({
             return "success";
       });
     }
-
   },
-  getters:{
-    
+  getters:{ 
   },
   modules: {
   }

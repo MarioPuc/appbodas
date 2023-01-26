@@ -84,6 +84,12 @@
               <div>
                 <v-btn color="#E6C98A" class="white--text my-5" tile elevation="0"
                   v-on:click="() => { this.datosPrincipales = !this.datosPrincipales }">
+                  <span v-if="this.datosApp.invitado.isUpdated">
+                    Actualizar datos de confirmación
+                  </span>
+                  <span v-else>
+                    Confirmar datos
+                  </span>
                   <v-icon>mdi-arrow-right-bold</v-icon>
                 </v-btn>
               </div>
