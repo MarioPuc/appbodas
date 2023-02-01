@@ -29,6 +29,11 @@ export default new Vuex.Store({
       fuenteCuerpo: "'Gilda Display', serif",
       tamanoFuenteTitulo: 30,
       tamanoFuenteCuerpo: 15,
+      tema: {
+        preview: 'spark-shine.png',
+        nombre: 'Spark&Shine',
+        fondo: 'background-gems.png',
+      },
       colorFuenteTitulo: "#333",
       colorFuenteCuerpo: "#333",
       locacionEvento: {
@@ -53,7 +58,10 @@ export default new Vuex.Store({
             "coloresFuentes": [],
             "fondos": [],
             "idFirebase": ""
-          }
+          },
+          temas: [
+            { fondo: "background-gems.png" }
+          ]
         }
     ],
     respuestaAnadirEvento: "",

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import InvitadosView from '../views/InvitadosView.vue'
+import InvitadosPorCodigoView from '../views/InvitadosPorCodigoView.vue'
 
 Vue.use(VueRouter)
 
@@ -12,8 +13,8 @@ const routes = [
   },
   {
     path: '/invitado/:idInvitado?',
-    name: 'home1',
-    component: InvitadosView
+    name: 'InvitadosPorCodigo',
+    component: () => import(/* webpackChunkName: "about" */ '../views/InvitadosPorCodigoView')
   },
   {
     path: '/login',
