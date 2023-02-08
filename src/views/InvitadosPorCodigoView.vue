@@ -7,7 +7,8 @@
                 </div>
             </div>
             <div key=2 v-else>
-                <ThemeBirthday />
+                <ThemeBirthday1 v-if="datosApp.evento?.tema.nombre == 'Spark&Shine'"/>
+                <ThemeWedding1 v-if="datosApp.evento?.tema.nombre == 'Nupcial'"/>
             </div>
         </transition>
     </div>
@@ -16,13 +17,15 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 
-import ThemeBirthday from '../components/themes/birthday-1/ThemeBirthday1.vue';
+import ThemeBirthday1 from '../components/themes/birthday-1/ThemeBirthday1.vue';
+import ThemeWedding1 from '@/components/themes/wedding-1/ThemeWedding1.vue';
 
 export default {
     name: 'InvitadosPorCodigoView',
 
     components: {
-        ThemeBirthday
+        ThemeBirthday1,
+        ThemeWedding1
     },
 
     data: () => ({
@@ -39,7 +42,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['visibles', 'datosApp'])
+        ...mapState(['visibles', 'datosApp']),
     },
 
     methods: {

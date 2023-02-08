@@ -217,6 +217,4 @@ export default {
 
 </script>
 
-<style>
-@import './styles.css';
-</style>
+<style scoped src="./styles.css"></style>
