@@ -9,7 +9,7 @@
           <v-row class="py-4">
             <v-col cols="6"></v-col>
             <v-col cols="6" class="text-right">
-              <v-btn color="indigo white--text" v-on:click="isCreating = !isCreating">Agregar evento</v-btn>
+              <v-btn color="indigo white--text" v-on:click="openAgregarEvento()">Agregar evento</v-btn>
             </v-col>
           </v-row>
 
@@ -222,7 +222,7 @@
               <v-data-table :headers="headers" :items="this.eventos[0]" :items-per-page="5" class="elevation-1">
                 <template v-slot:item.actions="{ item }">
                   <router-link :to="`/detallesEvento/${item.id}`" tag="button">
-                    <v-icon medium color="info" class="mr-2" to="/detallesEvento/1">
+                    <v-icon medium color="info" class="mr-2">
                       mdi-pencil
                     </v-icon>
                   </router-link>
@@ -376,7 +376,7 @@ export default {
 
   methods: {
 
-    ...mapActions(['addEvento', 'getEmpleados', 'getEmpresas', 'getEventos', 'getOpciones']),
+    ...mapActions(['addEvento', 'getEmpleados', 'getEmpresas', 'getEventos', 'getOpciones', 'resetEvento']),
 
     agregarEvento() {
       this.addEvento(this.evento);
@@ -423,6 +423,12 @@ export default {
         this.arrayPDF = [];
       }
     },
+
+    openAgregarEvento() {
+      this.resetEvento();
+      this.isCreating = !this.isCreating;
+    },
+
     actualizarEmpleados(id) {
       console.log(id);
       this.getEmpleados(id);

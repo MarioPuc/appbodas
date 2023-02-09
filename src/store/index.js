@@ -492,6 +492,47 @@ export default new Vuex.Store({
           .then((snapshot) => {
             return "success";
       });
+    },
+
+    resetEvento({commit}) {
+      let defaultValue = {
+        ceremoniaAdicional: 'No',
+        codigoVestimenta: 'Formal',
+        tipoEvento: 'Boda Religiosa',
+        nombreEvento: '',
+        nombreCliente: '',
+        numeroInvitaciones: 0,
+        telefonoCliente: '',
+        fechaEvento: '',
+        docs: [],
+        soloAdultos: false,
+        fondo: 'fondoboda.jpeg',
+        fuenteTitulo: "'Parisienne', cursive",
+        fuenteCuerpo: "'Gilda Display', serif",
+        tamanoFuenteTitulo: 30,
+        tamanoFuenteCuerpo: 15,
+        tema: {
+          preview: 'spark-shine.png',
+          nombre: 'Spark&Shine',
+          fondo: 'background-gems.png',
+        },
+        colorFuenteTitulo: "#333",
+        colorFuenteCuerpo: "#333",
+        locacionEvento: {
+          lat: 20.967298,
+          lng:-89.623639
+        }, 
+        locacionCeremonia: {
+          lat: 20.967298,
+          lng:-89.623639
+        },
+        locacionCeremoniaAdicional: {
+          lat: 20.967298,
+          lng:-89.623639
+        }
+      };
+
+      commit('setEvento', defaultValue);
     }
   },
   getters:{ 
