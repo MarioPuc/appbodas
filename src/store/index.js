@@ -34,6 +34,9 @@ export default new Vuex.Store({
         nombre: 'Spark&Shine',
         fondo: 'background-gems.png',
       },
+      textoLocacionEvento: "",
+      textoLocacionCeremonia: "",
+      textoLocacionCeremoniaAdicional: "",
       colorFuenteTitulo: "#333",
       colorFuenteCuerpo: "#333",
       locacionEvento: {
@@ -516,6 +519,9 @@ export default new Vuex.Store({
           nombre: 'Spark&Shine',
           fondo: 'background-gems.png',
         },
+        textoLocacionEvento: "",
+        textoLocacionCeremonia: "",
+        textoLocacionCeremoniaAdicional: "",
         colorFuenteTitulo: "#333",
         colorFuenteCuerpo: "#333",
         locacionEvento: {
