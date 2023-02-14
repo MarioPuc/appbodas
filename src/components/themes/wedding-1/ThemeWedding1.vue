@@ -16,8 +16,8 @@
                                 </div>
 
                                 <div class="text-center pt-4 nos-casamos">
-                                    <div>Nos haría muy felices que nos acompañaras</div>
-                                    <div>en este día especial para nosotros</div>
+                                    <div>Nos haría muy felices que nos</div>
+                                    <div>acompañaras en este día especial para nosotros</div>
                                 </div>
 
                                 <div class="text-center pt-4 nos-casamos">
