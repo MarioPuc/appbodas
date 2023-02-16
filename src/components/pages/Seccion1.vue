@@ -1,7 +1,7 @@
 <template>
   <div class="text-center theme-wedding"
     :style="`background-image: url('https://workspacedigiart.com/img/fondos/fondoboda.jpeg');`"
-    v-if="visibles.bienvenida">
+    >
     <div class="container full-height">
       <v-container fill-height fluid>
         <v-row align="center" justify="center">
@@ -56,25 +56,10 @@ export default {
     msjRespuesta: ''
   }),
 
-  created() {
-    this.initialize();
-  },
-
   computed: {
     ...mapState(['visibles', 'datosApp'])
   },
 
-  methods: {
-    ...mapActions(['getInvitadoById']),
-
-    async setInvitado() {
-      this.msjRespuesta = await this.getInvitadoById(this.codigoInvitado);
-      console.log(this.msjRespuesta);
-    },
-
-    async initialize() {
-      this.$route.params.idInvitado ? await this.getInvitadoById(this.$route.params.idInvitado) : null
-    }
-  }
+  methods: {}
 }
 </script>

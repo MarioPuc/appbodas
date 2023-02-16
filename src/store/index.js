@@ -79,7 +79,11 @@ export default new Vuex.Store({
       invitado: {
         isUpdated: false,
       },
-      evento: {},
+      evento: {
+        tema: {
+          nombre: ""
+        }
+      },
       respuesta: {
         codigoInvitado: "",
       }

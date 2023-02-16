@@ -7,8 +7,13 @@
                 </div>
             </div>
             <div key=2 v-else>
-                <ThemeBirthday1 v-if="datosApp.evento?.tema.nombre == 'Spark&Shine'"/>
-                <ThemeWedding1 v-if="datosApp.evento?.tema.nombre == 'Nupcial'"/>
+                <div v-if="datosApp.respuesta.codigoInvitado == 'exito'">
+                    <ThemeBirthday1 v-if="datosApp.evento?.tema.nombre == 'Spark&Shine'"/>
+                    <ThemeWedding1 v-if="datosApp.evento?.tema.nombre == 'Nupcial'"/>
+                </div>
+                <div v-else>
+                    <ErrorPage />
+                </div>
             </div>
         </transition>
     </div>
@@ -19,13 +24,15 @@ import { mapActions, mapState } from 'vuex';
 
 import ThemeBirthday1 from '../components/themes/birthday-1/ThemeBirthday1.vue';
 import ThemeWedding1 from '@/components/themes/wedding-1/ThemeWedding1.vue';
+import ErrorPage from '@/components/pages/ErrorPage.vue';
 
 export default {
     name: 'InvitadosPorCodigoView',
 
     components: {
         ThemeBirthday1,
-        ThemeWedding1
+        ThemeWedding1,
+        ErrorPage
     },
 
     data: () => ({
@@ -83,7 +90,6 @@ export default {
     width: 100vw;
     display: flex;
     flex-direction: column;
-    border: solid red 1px;
     align-items: center;
     justify-content: center;
     background-color: #E3F4FD;

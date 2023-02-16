@@ -69,8 +69,7 @@ export default {
     },
 
     async setInvitado() {
-      this.msjRespuesta = await this.getInvitadoById(this.result);
-      console.log(this.msjRespuesta);
+        this.$router.push('/invitado/' + this.result);
     },
   }
 }
