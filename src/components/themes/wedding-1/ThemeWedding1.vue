@@ -171,6 +171,7 @@ export default {
         },
 
         fechaCeremoniaReadable() {
+            moment.locale('es-mx');
             return moment(this.datosApp.evento.fechaEvento).format('Do [de] MMMM [del] YYYY');
         },
 
