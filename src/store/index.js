@@ -486,10 +486,13 @@ export default new Vuex.Store({
       })
     },
 
-    async numeroAsistentes(state, data) {
+    async numeroAsistentes(state, opciones) {
       let invitado = state.state.datosApp.invitado;
 
-      invitado.totalAsistentes = data;
+      invitado.totalAsistentes = opciones.totalAsistentes;
+      invitado.numeroPlatillosEspecificos = opciones.numeroPlatillosEspecificos;
+      invitado.descripcionAlergias = opciones.descripcionAlergias;
+      invitado.preferenciasSeleccionadas = opciones.preferenciasSeleccionadas;
       invitado.isUpdated = true;
 
       await db

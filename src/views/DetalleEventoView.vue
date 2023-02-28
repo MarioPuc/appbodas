@@ -44,12 +44,12 @@
                   :rules="reglas.fechaEvento"></v-text-field>
               </v-col>
 
-              <v-col cols="6">
+              <v-col cols="6" v-if="evento.tipoEvento !== 'Boda Ceremonial'">
                 <v-text-field label="Hora del evento*" hide-details="auto" type="time" v-model="evento.horaEvento"
                   :rules="reglas.horaEvento"></v-text-field>
               </v-col>
 
-              <v-col cols="6">
+              <v-col cols="6" v-if="evento.tipoEvento !== 'Boda Ceremonial'">
                 <Map tipoUbicacion="evento" />
               </v-col>
 
@@ -87,7 +87,7 @@
               </v-col>
             </v-row>
 
-            <div>
+            <div v-if="evento.tipoEvento !== 'Boda Civil'">
 
               <h2 class="text-left py-2">Datos de la Ceremonia</h2>
 

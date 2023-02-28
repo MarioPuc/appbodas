@@ -12,11 +12,32 @@
     font-size: 26px;
 }
 
+.fecha-ceremonia {
+    font-family: Parisienne;
+    font-size: 36px;
+}
+
+.hora-ceremonia {
+    font-family: Parisienne;
+    font-size: 28px;
+}
+
+.lugar-ceremonia {
+    font-family: Parisienne;
+    font-size: 40px;
+    letter-spacing: 3px;
+    color: #E6C98A;
+}
+
 .title-text {
     font-family: Parisienne;
-    font-size: 35px;
+    font-size: 40px;
 }
 
 .body-text {
     font-family: Gilda Display, seriff;
+}
+
+.contenedor {
+    width: 90%;
 }

@@ -1,35 +1,83 @@
 <template>
     <div class="text-center theme-wedding"
         style="background-image: url('https://workspacedigiart.com/img/fondos/fondoboda.jpeg');">
-        <div class="container full-height">
+        <div :class="{
+            'container full-height': !datosPrincipales,
+            'container ': datosPrincipales,
+        }" >
             <v-container fill-height fluid>
                 <v-row align="center" justify="center">
                     <div v-if="visibles.bienvenida == false && visibles.confirmacionAsistencia == true">
                         <div v-if="datosPrincipales">
                             <div>
-                                <div class="text-center pt-4 nos-casamos">
-                                    ¡Nos casamos!
-                                </div>
 
                                 <div class="text-center font gold--text owner">
                                     {{ datosApp.evento.nombreOwner }}
                                 </div>
 
                                 <div class="text-center pt-4 nos-casamos">
-                                    <div>Nos haría muy felices que nos</div>
-                                    <div>acompañaras en este día especial para nosotros</div>
+                                    <div>
+                                        Nos uniremos en matrimonio y nos <br> complace invitarlos a la ceremonia <br>
+                                        religiosa que
+                                        tendrá lugar el próximo
+                                    </div>
                                 </div>
 
                                 <div class="text-center pt-4 nos-casamos">
-                                    <div>La ceremonia tendrá lugar el día {{ fechaCeremoniaReadable }}</div>
-                                    <div>en {{ datosApp.evento.textoLocacionCeremonia }}</div>
+                                    <div class="fecha-ceremonia">{{ fechaCeremoniaReadable }}</div>
+
+                                    <div class="hora-ceremonia" v-if="tipoEvento !== 'Boda Civil'">
+                                        {{ datosApp.evento.horarioCeremonia }} hrs
+                                    </div>
+
+                                    <div class="lugar-ceremonia" v-if="tipoEvento !== 'Boda Civil'">
+                                        {{ datosApp.evento.textoLocacionCeremonia }}
+                                    </div>
                                 </div>
 
-                                <a :href="coordinatesGrades" target="_blank">
+                                <a :href="coordinatesCeremonia" target="_blank" v-if="tipoEvento !== 'Boda Civil'">
                                     <v-btn color="#E6C98A" class="white--text my-5" tile elevation="0">
-                                        <v-icon>mdi-map-marker</v-icon> Ver ubicación en Google Maps
+                                        <v-icon>mdi-map-marker</v-icon> Ver ubicación de la ceremonia <br> en Google Maps
                                     </v-btn>
                                 </a>
+
+                                <div v-if="tipoEvento !== 'Boda Ceremonial'">
+                                    <img src='@/assets/img/separator.svg' alt="some file" height='46' width='237' />
+
+                                    <div class="title-text">Recepción</div>
+
+                                    <div class="hora-ceremonia">{{ datosApp.evento.horaEvento }} hrs</div>
+
+                                    <div class="lugar-ceremonia">{{ datosApp.evento.textoLocacionEvento }}</div>
+
+                                    <a :href="coordinatesEvento" target="_blank">
+                                        <v-btn color="#E6C98A" class="white--text my-5" tile elevation="0">
+                                            <v-icon>mdi-map-marker</v-icon> Ver ubicación del evento <br> en Google Maps
+                                        </v-btn>
+                                    </a>
+                                </div>
+
+                                <div>
+                                    <img src='@/assets/img/separator.svg' alt="some file"  height='46' width='237' /> 
+                                    <div class="title-text">Obsequios</div>
+                                    <div class="nos-casamos">{{ datosApp.evento.linkMesas }}</div>
+                                </div>
+
+                                <div>
+                                    <img src='@/assets/img/separator.svg' alt="some file"  height='46' width='237' /> 
+                                    <div class="title-text">Vestimenta</div>
+                                    <div class="nos-casamos">{{ datosApp.evento.codigoVestimenta }}</div>
+                                </div>
+
+                                <div>
+                                    <div class="nos-casamos py-4" v-if="datosApp.evento.soloAdultos">
+                                        Para permitir a todos los invitados,
+                                        incluidos los padres, una noche de relajación,
+                                        hemos elegido que nuestra boda sea una ocasión solo para adultos.
+                                        <br><br>
+                                        ¡No podemos esperar para celebrar contigo!
+                                    </div>
+                                </div>
 
                                 <div>
                                     <v-btn color="#E6C98A" class="white--text my-5" tile elevation="0"
@@ -73,15 +121,27 @@
 
                                 <div>
                                     <p class="body-text pt-4">
-                                        ¿Podría decirnos cuantos <br /> asistentes serán?
+                                        ¿Podría decirnos cuantos personas asistirán?
                                     </p>
 
                                     <v-form>
                                         <v-select v-model="totalAsistentes" label="Número de asistentes"
                                             :items="arrayAsistentes" color="#000"></v-select>
 
+                                        <p class="body-text pt-4">
+                                            ¿Cuenta con alguna alergia o preferencia alimenticia?
+                                        </p>
+
+                                        <v-select v-model="numeroPlatillosEspecificos" label="Número de platillos a considerar: "
+                                            :items="arrayAsistentes" color="#000"></v-select>
+
+                                        <v-text-field v-model="descripcionAlergias" label="Describa su alergia alimenticia"></v-text-field>
+
+                                        <v-select v-model="preferenciasSeleccionadas" label="Seleccione la(s) preferecia(s): "
+                                            :items="arrayPreferenciasAlimenticias" color="#000" multiple></v-select>
+
                                         <v-btn color="#E6C98A" class="white--text" tile elevation="0"
-                                            v-on:click="setNumeroAsistentes()">Añadir número de invitados</v-btn>
+                                            v-on:click="setNumeroAsistentes()">Guardar</v-btn>
                                     </v-form>
                                 </div>
                             </div>
@@ -116,13 +176,23 @@
 
                             <p>{{ this.datosApp.invitado.totalAsistentes }}</p>
 
-                            <h3 class="d-none">Preferencias alimenticias: </h3>
+                            <h3>Platillos específicos: </h3>
 
-                            <p class="d-none">N/A</p>
+                            <p>{{ this.datosApp.invitado.numeroPlatillosEspecificos }}</p>
 
-                            <h3 class="d-none">Alergias alimenticias: </h3>
+                            <h3>Preferencias alimenticias: </h3>
 
-                            <p class="d-none">N/A</p>
+                            <p>
+                              <ul>
+                                <li v-for="item in this.datosApp.invitado.preferenciasSeleccionadas">
+                                    {{ item }}
+                                </li>
+                              </ul>
+                            </p>
+
+                            <h3>Alergias alimenticias: </h3>
+
+                            <p>{{ this.datosApp.invitado.descripcionAlergias }}</p>
 
                             <p class="d-none">
                                 Puedes cambiar tu selección antes del:
@@ -159,7 +229,17 @@ export default {
         coordenadasGrados: "",
         datosPrincipales: true,
         totalAsistentes: "0",
-        visibleAsistentes: true
+        numeroPlatillosEspecificos: "0",
+        descripcionAlergias: "",
+        preferenciasSeleccionadas: [],
+        visibleAsistentes: true,
+        arrayPreferenciasAlimenticias: [
+            'Vegano',
+            'Vegetariano',
+            'Kosher',
+            'Keto',
+            'Libre de gluten'
+        ],
     }),
 
     computed: {
@@ -175,8 +255,13 @@ export default {
             return moment(this.datosApp.evento.fechaEvento).format('Do [de] MMMM [del] YYYY');
         },
 
-        coordinatesGrades() {
+        coordinatesEvento() {
             const objCoordenadas = this.datosApp.evento.locacionEvento;
+            return `https://www.google.com.mx/maps/search/${objCoordenadas.lat}, ${objCoordenadas.lng}`;
+        },
+
+        coordinatesCeremonia() {
+            const objCoordenadas = this.datosApp.evento.locacionCeremonia;
             return `https://www.google.com.mx/maps/search/${objCoordenadas.lat}, ${objCoordenadas.lng}`;
         },
 
@@ -190,6 +275,10 @@ export default {
 
         urlActual() {
             return window.location.href;
+        },
+
+        tipoEvento() {
+            return this.datosApp.evento.tipoEvento;
         }
     },
 
@@ -202,13 +291,17 @@ export default {
 
         setNumeroAsistentes() {
             this.visibleAsistentes = false;
-            this.numeroAsistentes(this.totalAsistentes);
+            let opciones = {
+                totalAsistentes: this.totalAsistentes,
+                numeroPlatillosEspecificos: this.numeroPlatillosEspecificos,
+                descripcionAlergias: this.descripcionAlergias,
+                preferenciasSeleccionadas: this.preferenciasSeleccionadas,
+            }
+            this.numeroAsistentes(opciones);
         },
     }
 }
 
 </script>
 
-<style scoped src="./styles.css">
-
-</style>
+<style scoped src="./styles.css"></style>
