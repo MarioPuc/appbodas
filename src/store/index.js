@@ -78,6 +78,9 @@ export default new Vuex.Store({
     datosApp: {
       invitado: {
         isUpdated: false,
+        totalAsistentes: 0,
+        asistentesConfirmados: 1,
+        platillosEspeciales: []
       },
       evento: {
         tema: {
@@ -99,6 +102,11 @@ export default new Vuex.Store({
       state.visibles.confirmacionAsistencia = valor.visibilidad;
       state.visibles.asistencia = valor.statusConfirmacion;
       state.datosApp.invitado.statusConfirmacion = valor.statusConfirmacion;
+    },
+    setDeletedPlatillo(state, valor){
+      let allPlatillos = state.datosApp.invitado.platillosEspeciales;
+      allPlatillos.splice(valor, 1);
+      state.datosApp.invitado.platillosEspeciales = allPlatillos;
     },
     setEmpleados(state, valor) {
       state.empleados = valor;
@@ -489,10 +497,9 @@ export default new Vuex.Store({
     async numeroAsistentes(state, opciones) {
       let invitado = state.state.datosApp.invitado;
 
-      invitado.totalAsistentes = opciones.totalAsistentes;
-      invitado.numeroPlatillosEspecificos = opciones.numeroPlatillosEspecificos;
-      invitado.descripcionAlergias = opciones.descripcionAlergias;
-      invitado.preferenciasSeleccionadas = opciones.preferenciasSeleccionadas;
+      invitado.asistentesConfirmados = opciones.asistentesConfirmados;
+      invitado.platillosEspeciales = opciones.platillosEspeciales;
+
       invitado.isUpdated = true;
 
       await db
@@ -502,6 +509,10 @@ export default new Vuex.Store({
           .then((snapshot) => {
             return "success";
       });
+    },
+
+    deletePlatillo({commit}, index) {
+      commit('setDeletedPlatillo', index);
     },
 
     resetEvento({commit}) {
