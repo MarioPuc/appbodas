@@ -125,8 +125,8 @@
                                     </p>
 
                                     <v-form>
-                                        <v-select v-model="datosApp.invitado.asistentesConfirmados" label="Número de asistentes"
-                                            :items="arrayAsistentes" color="#000"></v-select>
+                                        <v-select v-model="datosApp.invitado.asistentesConfirmados"
+                                            label="Número de asistentes" :items="arrayAsistentes" color="#000"></v-select>
 
                                         <p class="body-text pt-4">
                                             ¿Cuenta con alguna alergia o preferencia alimenticia?
@@ -144,7 +144,8 @@
                                                 </v-col>
 
                                                 <v-col>
-                                                    <v-select v-model="objPlatillo.tipoPlatillo" @change="onChangeTipoPlatillo" label="Tipo de platillo"
+                                                    <v-select v-model="objPlatillo.tipoPlatillo"
+                                                        @change="onChangeTipoPlatillo" label="Tipo de platillo"
                                                         :items="['Alergia alimentaria', 'Preferencia alimenticia', 'Ambos']"
                                                         color="#000"></v-select>
                                                 </v-col>
@@ -168,14 +169,14 @@
                                                 </v-col>
                                             </v-row>
 
-                                            <v-btn v-if="isAddingPlate" color="#E6C98A" class="white--text my-3" tile elevation="0"
-                                                v-on:click="addPlatilloArray()">Agregar platillo (s)</v-btn>
-                                            
-                                            <v-btn v-if="isEditingPlate" color="#E6C98A" class="white--text my-3" tile elevation="0"
-                                                v-on:click="updatePlatillo()">Editar platillo (s)</v-btn>
+                                            <v-btn v-if="isAddingPlate" color="#E6C98A" class="white--text my-3" tile
+                                                elevation="0" v-on:click="addPlatilloArray()">Agregar platillo (s)</v-btn>
+
+                                            <v-btn v-if="isEditingPlate" color="#E6C98A" class="white--text my-3" tile
+                                                elevation="0" v-on:click="updatePlatillo()">Editar platillo (s)</v-btn>
                                         </div>
 
-                                        <v-card>
+                                        <v-card class="my-8">
                                             <v-simple-table v-if="datosApp.invitado.platillosEspeciales.length > 0">
                                                 <template v-slot:default>
                                                     <thead>
@@ -269,45 +270,43 @@
                             <p>{{ this.datosApp.invitado.asistentesConfirmados }}</p>
 
                             <h3>Platillos específicos: </h3>
-                            
-                            <v-card>
-                                            <v-simple-table v-if="datosApp.invitado.platillosEspeciales.length > 0">
-                                                <template v-slot:default>
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-center">
-                                                                Cantidad
-                                                            </th>
-                                                            <th class="text-center">
-                                                                Tipo
-                                                            </th>
-                                                            <th class="text-center">
-                                                                Descripción Alergia
-                                                            </th>
-                                                            <th class="text-center">
-                                                                Preferencias alimenticias
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr v-for="(item, index) in platillosEspecialesFresh"
-                                                            :key="item.name">
-                                                            <td>{{ item.cantidadPlatillosEspeciales }}</td>
-                                                            <td>{{ item.tipoPlatillo }}</td>
-                                                            <td>{{ item.descripcionAlergias }}</td>
-                                                            <td>
-                                                                <ul v-if="item.preferenciasSeleccionadas.length > 0">
-                                                                    <li
-                                                                        v-for="preferencia in item.preferenciasSeleccionadas">
-                                                                        {{ preferencia }}
-                                                                    </li>
-                                                                </ul>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </template>
-                                            </v-simple-table>
-                                        </v-card>
+
+                            <v-card class="my-8">
+                                <v-simple-table v-if="datosApp.invitado.platillosEspeciales.length > 0">
+                                    <template v-slot:default>
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">
+                                                    Cantidad
+                                                </th>
+                                                <th class="text-center">
+                                                    Tipo
+                                                </th>
+                                                <th class="text-center">
+                                                    Descripción Alergia
+                                                </th>
+                                                <th class="text-center">
+                                                    Preferencias alimenticias
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(item, index) in platillosEspecialesFresh" :key="item.name">
+                                                <td>{{ item.cantidadPlatillosEspeciales }}</td>
+                                                <td>{{ item.tipoPlatillo }}</td>
+                                                <td>{{ item.descripcionAlergias }}</td>
+                                                <td>
+                                                    <ul v-if="item.preferenciasSeleccionadas.length > 0">
+                                                        <li v-for="preferencia in item.preferenciasSeleccionadas">
+                                                            {{ preferencia }}
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
+                            </v-card>
 
                             <p class="d-none">
                                 Puedes cambiar tu selección antes del:
@@ -409,13 +408,13 @@ export default {
             let sumaPlatillos = 0;
             let asistentesConfirmados = this.datosApp.invitado.asistentesConfirmados;
 
-            if(this.datosApp.invitado.platillosEspeciales.length > 0) {
+            if (this.datosApp.invitado.platillosEspeciales.length > 0) {
                 this.datosApp.invitado.platillosEspeciales.map(platillo => {
                     sumaPlatillos = sumaPlatillos + parseInt(platillo.cantidadPlatillosEspeciales);
                 });
             }
             console.log("suma platillos: " + sumaPlatillos);
-            let seleccionables =  asistentesConfirmados - sumaPlatillos;
+            let seleccionables = asistentesConfirmados - sumaPlatillos;
             console.log("seleccionables: " + seleccionables);
             for (let i = 1; i <= seleccionables; i++) {
                 arrayRespuesta.push(i.toString());
@@ -444,7 +443,7 @@ export default {
         },
 
         setNumeroAsistentes() {
-            if(this.datosApp.invitado.asistentesConfirmados) {
+            if (this.datosApp.invitado.asistentesConfirmados) {
                 this.visibleAsistentes = false;
                 let opciones = {
                     asistentesConfirmados: this.datosApp.invitado.asistentesConfirmados,
@@ -466,7 +465,7 @@ export default {
                     this.objPlatillo.descripcionAlergias = "";
                 }
 
-                this.datosApp.invitado.platillosEspeciales.push(this.objPlatillo); 
+                this.datosApp.invitado.platillosEspeciales.push(this.objPlatillo);
 
                 this.objPlatillo = {
                     cantidadPlatillosEspeciales: "0",
@@ -485,12 +484,12 @@ export default {
 
         abrirPlatillosForm() {
             let platillosLimite = 1;
-            if(this.datosApp.invitado.asistentesConfirmados) {
+            if (this.datosApp.invitado.asistentesConfirmados) {
                 platillosLimite = this.datosApp.invitado.asistentesConfirmados;
             }
-            let cantidadPlatillosEsp = this.datosApp.invitado.platillosEspeciales.length; 
+            let cantidadPlatillosEsp = this.datosApp.invitado.platillosEspeciales.length;
 
-            if(cantidadPlatillosEsp >= platillosLimite) {
+            if (cantidadPlatillosEsp >= platillosLimite) {
                 this.snackbar.text = "Se agotaron los platillos por seleccionar";
                 this.snackbar.open = true;
                 this.snackbar.color = "red darken-1 white--text";
